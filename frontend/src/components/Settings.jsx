@@ -87,244 +87,296 @@ export default function Settings({ settings, setSettings }) {
   };
 
   return (
-    <div className="flex-1 overflow-auto p-6">
-      <div className="flex items-center gap-3 mb-4">
-        <AppIcon src="icon/main icon s.png" size={28} />
+    <div className="flex-1 overflow-auto p-6 custom-scrollbar grid-bg">
+      <div className="flex items-center gap-4 mb-6 stagger">
+        <div className="p-3 glass rounded-2xl shadow-xl">
+          <AppIcon src="icon/main icon s.png" size={32} />
+        </div>
         <div>
-          <h1 className="text-2xl font-bold bg-gradient-to-r from-cyan-300 via-blue-300 to-violet-300 bg-clip-text text-transparent">Settings</h1>
-          <div className="text-[11px] opacity-60">SavageSave v1.0.0 · Created with Electron + React</div>
+          <h1 className="text-3xl font-black tracking-tighter brand-text glitch">Control Center</h1>
+          <div className="text-[11px] font-bold opacity-50 uppercase tracking-widest mt-1">SavageSave Terminal • System Configuration</div>
         </div>
       </div>
 
-      <div className="glass rounded-2xl p-5 mb-4">
-        <h3 className="font-medium mb-3">Downloads</h3>
-        <label className="text-xs opacity-70">Default save folder</label>
-        <div className="flex gap-2 mt-1">
-          <input value={settings.saveDir || ''} onChange={(e) => upd('saveDir', e.target.value)}
-            className="flex-1 bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm" />
-          <button onClick={pickDir} className="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-sm">Browse…</button>
-        </div>
-        <label className="text-xs opacity-70 mt-4 block">Default connections</label>
-        <input type="number" min={1} max={128} value={settings.connections}
-          onChange={(e) => upd('connections', Number(e.target.value))}
-          className="mt-1 w-32 bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm" />
-
-        <label className="flex items-center justify-between py-3 mt-2 cursor-pointer">
-          <span className="text-sm">Use browser cookies for video downloads</span>
-          <span
-            onClick={() => { upd('cookieBrowser', settings.cookieBrowser ? '' : 'edge'); }}
-            className={`w-10 h-6 rounded-full relative transition ${settings.cookieBrowser ? 'bg-gradient-to-r from-cyan-500 to-violet-500' : 'bg-white/10'}`}
-          >
-            <span className={`absolute top-0.5 ${settings.cookieBrowser ? 'left-5' : 'left-0.5'} w-5 h-5 bg-white rounded-full transition-all shadow`}></span>
-          </span>
-        </label>
-        {settings.cookieBrowser && (
-          <>
-            <label className="text-xs opacity-70 mt-2 block">Browser source</label>
-            <select
-              value={settings.cookieBrowser}
-              onChange={(e) => upd('cookieBrowser', e.target.value)}
-              className="mt-1 w-40 bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm outline-none cursor-pointer"
-            >
-              <option value="edge">Microsoft Edge</option>
-              <option value="chrome">Chrome</option>
-              <option value="firefox">Firefox</option>
-              <option value="brave">Brave</option>
-              <option value="opera">Opera</option>
-              <option value="vivaldi">Vivaldi</option>
-              <option value="safari">Safari</option>
-            </select>
-          </>
-        )}
-        <p className="text-[10px] opacity-50 mt-2">When enabled, SavageSave reads cookies from your chosen browser to access age-restricted or subscriber-only videos. Public videos download fine without this.</p>
-      </div>
-
-      <div className="glass rounded-2xl p-5 mb-4">
-        <h3 className="font-medium mb-3">Smart features</h3>
-        <Toggle label="Clipboard monitoring (auto-detect links)"
-          checked={settings.clipboardMonitor}
-          onChange={(v) => upd('clipboardMonitor', v)} />
-        <Toggle label="OS notifications on completion"
-          checked={settings.notifications}
-          onChange={(v) => upd('notifications', v)} />
-        <Toggle label="Smart accelerator (dynamic chunking)"
-          checked={settings.smartAccel}
-          onChange={(v) => upd('smartAccel', v)} />
-      </div>
-
-      <div className="glass rounded-2xl p-5 mb-4">
-        <h3 className="font-medium mb-3">Account</h3>
-        {user ? (
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-cyan-400 to-violet-500 grid place-items-center text-sm font-medium">{user.email.charAt(0).toUpperCase()}</div>
-              <div>
-                <div className="text-sm font-medium">{user.email}</div>
-                <div className="text-[11px] opacity-60">PRO Free · Supabase Auth</div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 stagger">
+        {/* Downloads Group */}
+        <div className="glass rounded-2xl p-6 border-white/5 shadow-2xl transition-all duration-300 hover:border-white/10">
+          <h3 className="font-black text-sm uppercase tracking-widest mb-5 opacity-90 flex items-center gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,0.8)]" />
+            Downloads
+          </h3>
+          
+          <div className="space-y-5">
+            <div>
+              <label className="text-[10px] font-black uppercase opacity-50 tracking-widest mb-2 block">Default Storage Path</label>
+              <div className="flex gap-2">
+                <input value={settings.saveDir || ''} onChange={(e) => upd('saveDir', e.target.value)}
+                  className="flex-1 bg-black/20 border border-white/10 rounded-xl px-4 py-2.5 text-sm font-medium focus:border-cyan-500/50 focus:bg-black/40 transition-all outline-none" />
+                <button onClick={pickDir} className="px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-xs font-bold transition-all border border-white/5 uppercase tracking-tighter">Browse</button>
               </div>
             </div>
-            <button onClick={() => { signOut(); }} className="px-4 py-2 rounded-xl bg-rose-500/20 text-rose-300 text-sm hover:bg-rose-500/30 transition">Sign Out</button>
-          </div>
-        ) : (
-          <div className="flex items-center justify-between">
-            <div className="text-sm opacity-70">Sign in to unlock cloud sync, cross-device queues, and PRO features.</div>
-            <button onClick={() => setAuthOpen(true)} className="px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-violet-500 text-white text-sm font-medium shadow-turbo btn-turbo">Sign In</button>
-          </div>
-        )}
-      </div>
 
-      <div className="glass rounded-2xl p-5 mb-4">
-        <h3 className="font-medium mb-3">Software Updates</h3>
-        <div className="flex items-center justify-between">
-          <div>
-            <div className="text-sm">Current version: <span className="font-mono text-cyan-300">{APP_VERSION_LABEL}</span></div>
-            {updateState === 'checking' && <div className="text-[11px] text-cyan-400 mt-1 animate-pulse">Checking for updates...</div>}
-            {updateState === 'latest' && <div className="text-[11px] text-emerald-400 mt-1">You are using the latest version.</div>}
-            {updateState === 'available' && <div className="text-[11px] text-blue-400 mt-1">Version {updateInfo?.version} is available and downloading...</div>}
-            {updateState === 'progress' && (
-              <div className="mt-2 w-48">
-                <div className="flex justify-between text-[10px] mb-1">
-                  <span className="opacity-60">Downloading...</span>
-                  <span>{Math.round(updateProgress)}%</span>
+            <div>
+              <label className="text-[10px] font-black uppercase opacity-50 tracking-widest mb-2 block">Network Connections</label>
+              <div className="flex items-center gap-4">
+                <input type="number" min={1} max={128} value={settings.connections}
+                  onChange={(e) => upd('connections', Number(e.target.value))}
+                  className="w-24 bg-black/20 border border-white/10 rounded-xl px-4 py-2.5 text-sm font-bold focus:border-cyan-500/50 focus:bg-black/40 transition-all outline-none" />
+                <div className="text-[10px] opacity-40 leading-tight">MAX: 128 CONNS<br/>Optimized for speed</div>
+              </div>
+            </div>
+
+            <div className="pt-2">
+              <label className="flex items-center justify-between py-1 cursor-pointer group">
+                <div>
+                  <div className="text-sm font-bold group-hover:text-cyan-300 transition-colors">Browser Cookies</div>
+                  <div className="text-[10px] opacity-40">Access restricted content from your browser</div>
                 </div>
-                <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
-                  <div className="h-full bg-gradient-to-r from-cyan-500 to-blue-500 transition-all duration-300" style={{ width: `${updateProgress}%` }} />
+                <Toggle checked={!!settings.cookieBrowser} onChange={() => upd('cookieBrowser', settings.cookieBrowser ? '' : 'edge')} />
+              </label>
+              
+              <AnimatePresence>
+                {settings.cookieBrowser && (
+                  <motion.div 
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    className="overflow-hidden mt-3"
+                  >
+                    <div className="p-3 bg-black/20 rounded-xl border border-white/5">
+                      <label className="text-[10px] font-black uppercase opacity-50 tracking-widest mb-2 block">Browser Engine</label>
+                      <select
+                        value={settings.cookieBrowser}
+                        onChange={(e) => upd('cookieBrowser', e.target.value)}
+                        className="w-full bg-black/40 border border-white/10 rounded-lg px-3 py-2 text-xs font-bold outline-none cursor-pointer focus:border-cyan-500/50"
+                      >
+                        <option value="edge">Microsoft Edge</option>
+                        <option value="chrome">Chrome</option>
+                        <option value="firefox">Firefox</option>
+                        <option value="brave">Brave</option>
+                        <option value="opera">Opera</option>
+                        <option value="vivaldi">Vivaldi</option>
+                        <option value="safari">Safari</option>
+                      </select>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          </div>
+        </div>
+
+        {/* Smart Features Group */}
+        <div className="glass rounded-2xl p-6 border-white/5 shadow-2xl transition-all duration-300 hover:border-white/10">
+          <h3 className="font-black text-sm uppercase tracking-widest mb-5 opacity-90 flex items-center gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-violet-400 shadow-[0_0_8px_rgba(167,139,250,0.8)]" />
+            Automation
+          </h3>
+          
+          <div className="space-y-1">
+            <ToggleItem 
+              label="Clipboard Monitoring" 
+              desc="Auto-detect links from clipboard"
+              checked={settings.clipboardMonitor} 
+              onChange={(v) => upd('clipboardMonitor', v)} 
+            />
+            <ToggleItem 
+              label="OS Notifications" 
+              desc="Alert when downloads complete"
+              checked={settings.notifications} 
+              onChange={(v) => upd('notifications', v)} 
+            />
+            <ToggleItem 
+              label="Smart Accelerator" 
+              desc="Dynamic multi-threading"
+              checked={settings.smartAccel} 
+              onChange={(v) => upd('smartAccel', v)} 
+            />
+          </div>
+
+          <div className="mt-8 pt-6 border-t border-white/5">
+            <h3 className="font-black text-[10px] uppercase tracking-widest mb-4 opacity-40">Account & Identity</h3>
+            {user ? (
+              <div className="flex items-center justify-between p-3 bg-white/5 rounded-2xl border border-white/5">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-cyan-400 to-violet-500 grid place-items-center text-sm font-black shadow-lg border border-white/10">
+                    {user.email.charAt(0).toUpperCase()}
+                  </div>
+                  <div>
+                    <div className="text-sm font-black tracking-tight">{user.email}</div>
+                    <div className="text-[10px] font-black uppercase tracking-tighter text-cyan-400/80">PRO MEMBER</div>
+                  </div>
                 </div>
+                <button onClick={() => signOut()} className="px-3 py-1.5 rounded-lg bg-rose-500/10 text-rose-400 text-[10px] font-black uppercase tracking-widest hover:bg-rose-500/20 transition-all border border-rose-500/20">Sign Out</button>
+              </div>
+            ) : (
+              <div className="p-4 bg-gradient-to-br from-cyan-500/5 to-violet-500/5 rounded-2xl border border-white/5 text-center">
+                <div className="text-xs font-bold opacity-70 mb-3">Sync your downloads & settings</div>
+                <button onClick={() => setAuthOpen(true)} className="w-full py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-violet-500 text-white text-[10px] font-black tracking-widest shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all">CONNECT ACCOUNT</button>
               </div>
             )}
-            {updateState === 'downloaded' && <div className="text-[11px] text-emerald-400 mt-1">Update ready to install!</div>}
-            {updateState === 'error' && <div className="text-[11px] text-rose-400 mt-1">Error: {updateErr}</div>}
           </div>
-
-          {updateState === 'downloaded' ? (
-            <button
-              onClick={handleRestart}
-              className="px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-sm font-bold shadow-lg hover:scale-105 active:scale-95 transition-all"
-            >
-              Restart & Install
-            </button>
-          ) : (
-            <button
-              disabled={updateState === 'checking' || updateState === 'progress'}
-              onClick={handleCheckUpdates}
-              className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
-                updateState === 'checking' || updateState === 'progress'
-                  ? 'bg-white/5 text-white/30 cursor-not-allowed'
-                  : 'bg-white/10 hover:bg-white/20 text-white'
-              }`}
-            >
-              {updateState === 'checking' ? 'Checking...' : 'Check for Updates'}
-            </button>
-          )}
         </div>
-      </div>
 
-      <div className="glass rounded-2xl p-5">
-        <h3 className="font-medium mb-3">About</h3>
-        <div className="flex items-center justify-between mb-3">
-          <div>
-            <div className="text-sm font-medium">{APP_NAME}</div>
-            <div className="text-xs opacity-50 mt-0.5">
-              Version <span className="text-cyan-300/80 font-mono">{APP_VERSION_LABEL}</span>
-              <span className="mx-1.5 opacity-30">|</span>
-              <span className="inline-flex items-center gap-1.5 px-1.5 py-0.5 rounded-full text-[10px] font-medium bg-cyan-500/10 text-cyan-300 border border-cyan-400/20">
-                <span className="w-1 h-1 rounded-full bg-cyan-400" />
-                {settings.releaseChannel || APP_DEFAULT_CHANNEL}
-              </span>
+        {/* Updates Card */}
+        <div className="glass rounded-2xl p-6 border-white/5 shadow-2xl transition-all duration-300 hover:border-white/10 lg:col-span-2">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div className="flex-1">
+              <h3 className="font-black text-sm uppercase tracking-widest mb-2 opacity-90 flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
+                System Updates
+              </h3>
+              <div className="text-sm font-bold">
+                Build Version <span className="font-mono text-cyan-300 px-2 py-0.5 bg-cyan-500/10 rounded border border-cyan-500/20 ml-2">{APP_VERSION_LABEL}</span>
+              </div>
+              
+              <div className="mt-3">
+                {updateState === 'checking' && <div className="text-[11px] font-black text-cyan-400 uppercase animate-pulse">Checking Repository...</div>}
+                {updateState === 'latest' && <div className="text-[11px] font-black text-emerald-400 uppercase">You are up to date</div>}
+                {updateState === 'available' && <div className="text-[11px] font-black text-blue-400 uppercase">Patch {updateInfo?.version} Pending Download...</div>}
+                {updateState === 'progress' && (
+                  <div className="mt-3 w-full max-w-sm">
+                    <div className="flex justify-between text-[10px] font-black mb-1.5 uppercase opacity-60">
+                      <span>Downloading Assets</span>
+                      <span>{Math.round(updateProgress)}%</span>
+                    </div>
+                    <div className="h-2 w-full bg-black/40 rounded-full overflow-hidden border border-white/5 shadow-inner">
+                      <div className="h-full bg-gradient-to-r from-cyan-500 to-blue-500 transition-all duration-300 shadow-[0_0_12px_rgba(34,211,238,0.5)]" style={{ width: `${updateProgress}%` }} />
+                    </div>
+                  </div>
+                )}
+                {updateState === 'downloaded' && <div className="text-[11px] font-black text-emerald-400 uppercase animate-bounce mt-1">Update Ready for Installation</div>}
+                {updateState === 'error' && <div className="text-[11px] font-black text-rose-400 uppercase">Sync Error: {updateErr}</div>}
+              </div>
+            </div>
+
+            <div className="flex shrink-0">
+              {updateState === 'downloaded' ? (
+                <button
+                  onClick={handleRestart}
+                  className="px-6 py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-[11px] font-black shadow-2xl hover:scale-105 active:scale-95 transition-all tracking-widest uppercase animate-pulse"
+                >
+                  RESTART & APPLY
+                </button>
+              ) : (
+                <button
+                  disabled={updateState === 'checking' || updateState === 'progress'}
+                  onClick={handleCheckUpdates}
+                  className={`px-6 py-3 rounded-xl text-[11px] font-black tracking-widest uppercase transition-all shadow-xl ${
+                    updateState === 'checking' || updateState === 'progress'
+                      ? 'bg-white/5 text-white/20 cursor-not-allowed border border-white/5'
+                      : 'bg-white/10 hover:bg-white/20 text-white border border-white/10 hover:border-white/20'
+                  }`}
+                >
+                  {updateState === 'checking' ? 'SYNCING...' : 'CHECK FOR UPDATES'}
+                </button>
+              )}
             </div>
           </div>
-          <button
-            onClick={() => window.dispatchEvent(new CustomEvent('open-about-modal'))}
-            className="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-xs transition border border-white/10"
-          >
-            More info
-          </button>
         </div>
 
-        <div className="mb-3">
-          <label className="text-xs opacity-60 block mb-1">Release channel</label>
-          <div className="flex gap-2">
-            {APP_CHANNELS.map((ch) => (
-              <button
-                key={ch}
-                onClick={() => upd('releaseChannel', ch)}
-                className={`px-3 py-1.5 rounded-lg text-xs transition border ${
-                  (settings.releaseChannel || APP_DEFAULT_CHANNEL) === ch
-                    ? 'bg-cyan-500/15 text-cyan-300 border-cyan-400/30 shadow-[0_0_8px_rgba(56,189,248,0.1)]'
-                    : 'bg-white/5 text-slate-400 border-white/10 hover:bg-white/10 hover:text-slate-300'
-                }`}
-              >
-                {ch}
-              </button>
-            ))}
+        {/* About Card */}
+        <div className="glass rounded-2xl p-6 border-white/5 shadow-2xl transition-all duration-300 hover:border-white/10 lg:col-span-2 bg-gradient-to-br from-white/[0.02] to-transparent">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="flex items-center gap-5">
+              <div className="w-16 h-16 glass rounded-2xl grid place-items-center shadow-2xl border-white/10">
+                <AppIcon src="icon/main icon s.png" size={48} />
+              </div>
+              <div>
+                <h3 className="text-xl font-black brand-text">{APP_NAME} <span className="text-[10px] text-muted opacity-50 font-mono tracking-tighter uppercase ml-2">PRO EDITION</span></h3>
+                <div className="flex items-center gap-3 mt-1">
+                  <span className="text-[10px] font-black uppercase tracking-widest opacity-40">Release Channel</span>
+                  <div className="flex gap-1.5">
+                    {APP_CHANNELS.map((ch) => (
+                      <button
+                        key={ch}
+                        onClick={() => upd('releaseChannel', ch)}
+                        className={`px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-tighter transition-all border ${
+                          (settings.releaseChannel || APP_DEFAULT_CHANNEL) === ch
+                            ? 'bg-cyan-500/15 text-cyan-300 border-cyan-400/30'
+                            : 'bg-white/5 text-slate-500 border-white/10 hover:text-slate-400'
+                        }`}
+                      >
+                        {ch}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <button
+              onClick={() => window.dispatchEvent(new CustomEvent('open-about-modal'))}
+              className="px-6 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-[10px] font-black uppercase tracking-widest transition-all border border-white/10"
+            >
+              SYSTEM INFO
+            </button>
           </div>
+          
+          <p className="mt-6 text-xs font-medium leading-relaxed opacity-50 max-w-2xl">
+            SavageSave is a professional-grade multi-threaded download engine optimized for high-performance data retrieval. 
+            Engineered with a focus on speed, reliability, and modern UI aesthetics. Built with Node.js, Electron, and React.
+          </p>
         </div>
-
-        <p className="text-sm opacity-60">World-class desktop download manager built with Node.js + Electron + React + Tailwind. Multi-threaded HTTP Range downloads with live telemetry and smart video quality selection.</p>
       </div>
 
       {/* Admin Controls — Hidden unless verified */}
       {isAdminUser && (
-        <div className="mt-4">
+        <div className="mt-12 stagger">
           <button
             onClick={() => setAdminOpen(!adminOpen)}
-            className="flex items-center gap-2 text-[11px] opacity-30 hover:opacity-60 transition"
+            className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] opacity-20 hover:opacity-50 transition-all ml-2"
           >
             <span>{adminOpen ? '▼' : '▶'}</span>
-            <span className="font-mono tracking-tight">··</span>
+            <span>RESTRICTED_ACCESS</span>
           </button>
 
           {adminOpen && (
-            <div className="glass rounded-2xl p-5 mt-2 border border-white/5">
+            <motion.div 
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="glass rounded-2xl p-6 mt-4 border-white/5 shadow-2xl bg-black/40"
+            >
               {!adminVerified ? (
-                <div className="space-y-3">
-                  <h3 className="font-medium text-sm opacity-70">Restricted Access</h3>
+                <div className="flex items-center gap-4">
                   <input
                     type="password"
-                    placeholder="Enter admin password"
+                    placeholder="ENTER AUTH KEY"
                     value={adminPass}
                     onChange={(e) => setAdminPass(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && verifyAdmin()}
-                    className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm"
+                    className="flex-1 bg-black/40 border border-white/10 rounded-xl px-4 py-2.5 text-sm font-mono tracking-widest outline-none focus:border-rose-500/50"
                   />
-                  {adminError && <div className="text-xs text-rose-400">{adminError}</div>}
+                  {adminError && <div className="text-[10px] font-black text-rose-400 uppercase">{adminError}</div>}
                   <button
                     onClick={verifyAdmin}
-                    className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-sm transition"
+                    className="px-6 py-2.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 text-[10px] font-black uppercase tracking-widest transition-all border border-rose-500/20"
                   >
-                    Verify
+                    VERIFY
                   </button>
                 </div>
               ) : (
                 <>
-                  <div className="flex items-center justify-between mb-3">
-                    <h3 className="font-medium text-sm text-cyan-300">Admin Controls</h3>
+                  <div className="flex items-center justify-between mb-6">
+                    <h3 className="font-black text-xs uppercase tracking-[0.2em] text-rose-500">SYSTEM_OVERRIDE</h3>
                     <button
                       onClick={() => { resetToDefaults(); setAdminFlags({ ...MONETIZATION }); }}
-                      className="text-[11px] px-2 py-1 rounded-lg bg-white/5 hover:bg-white/10 transition"
+                      className="text-[9px] font-black uppercase tracking-widest px-3 py-1.5 rounded bg-white/5 border border-white/5 hover:bg-white/10"
                     >
-                      Reset All
+                      RESET_MODULES
                     </button>
                   </div>
-                  <div className="space-y-2">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {Object.entries(adminFlags).map(([key, val]) => (
-                      <label key={key} className="flex items-center justify-between py-1 cursor-pointer">
-                        <span className="text-xs opacity-70 font-mono">{key}</span>
-                        <span
-                          onClick={() => toggleAdmin(key)}
-                          className={`w-8 h-4 rounded-full relative transition ${val ? 'bg-gradient-to-r from-cyan-500 to-violet-500' : 'bg-white/10'}`}
-                        >
-                          <span className={`absolute top-0.5 ${val ? 'left-4' : 'left-0.5'} w-3 h-3 bg-white rounded-full transition-all shadow`} />
-                        </span>
+                      <label key={key} className="flex items-center justify-between p-3 bg-white/5 rounded-xl border border-white/5 hover:bg-white/[0.08] transition-all cursor-pointer">
+                        <span className="text-[10px] font-mono font-bold opacity-60 uppercase">{key}</span>
+                        <Toggle small checked={val} onChange={() => toggleAdmin(key)} />
                       </label>
                     ))}
                   </div>
-                  <div className="mt-3 text-[10px] opacity-40">
-                    Changes persist in localStorage. Restart app after toggling monetization_enabled for full backend sync.
-                  </div>
                 </>
               )}
-            </div>
+            </motion.div>
           )}
         </div>
       )}
@@ -332,16 +384,25 @@ export default function Settings({ settings, setSettings }) {
   );
 }
 
-function Toggle({ label, checked, onChange }) {
+function ToggleItem({ label, desc, checked, onChange }) {
   return (
-    <label className="flex items-center justify-between py-2 cursor-pointer">
-      <span className="text-sm">{label}</span>
-      <span
-        onClick={() => onChange(!checked)}
-        className={`w-10 h-6 rounded-full relative transition ${checked ? 'bg-gradient-to-r from-cyan-500 to-violet-500' : 'bg-white/10'}`}
-      >
-        <span className={`absolute top-0.5 ${checked ? 'left-5' : 'left-0.5'} w-5 h-5 bg-white rounded-full transition-all shadow`}></span>
-      </span>
+    <label className="flex items-center justify-between py-3 px-1 cursor-pointer group hover:bg-white/[0.02] rounded-xl transition-all">
+      <div>
+        <div className="text-sm font-bold group-hover:text-cyan-300 transition-colors">{label}</div>
+        <div className="text-[10px] opacity-40">{desc}</div>
+      </div>
+      <Toggle checked={checked} onChange={() => onChange(!checked)} />
     </label>
+  );
+}
+
+function Toggle({ checked, onChange, small }) {
+  return (
+    <div
+      onClick={(e) => { e.preventDefault(); e.stopPropagation(); onChange(!checked); }}
+      className={`${small ? 'w-8 h-4.5' : 'w-11 h-6'} rounded-full relative transition-all duration-300 cursor-pointer overflow-hidden ${checked ? 'bg-gradient-to-r from-cyan-500 to-blue-600 shadow-[0_0_12px_rgba(34,211,238,0.4)]' : 'bg-black/40 border border-white/10 shadow-inner'}`}
+    >
+      <div className={`absolute top-0.5 ${checked ? (small ? 'left-4' : 'left-5.5') : 'left-0.5'} ${small ? 'w-3.5 h-3.5' : 'w-5 h-5'} bg-white rounded-full transition-all duration-300 shadow-xl border border-black/10`} />
+    </div>
   );
 }

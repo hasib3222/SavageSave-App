@@ -21,114 +21,100 @@ export default function DownloadCard({ d, mode = 'sigma' }) {
 
   const ext = (d.filename || '').split('.').pop()?.toLowerCase() || '?';
 
-  const statusColor = isDone  ? '#34d399'
-                    : isError ? '#f87171'
+  const statusColor = isDone  ? '#10b981'
+                    : isError ? '#ef4444'
                     : isPost  ? 'var(--brand2)'
-                    : d.status === 'paused' ? '#fbbf24'
+                    : d.status === 'paused' ? '#f59e0b'
                     : 'var(--brand)';
 
   return (
     <div
-      className="glass relative overflow-hidden group"
+      className="glass relative overflow-hidden group transition-all duration-300 hover:translate-x-1"
       style={{
         borderRadius: 'var(--card-radius)',
-        padding: isCute ? '14px 16px' : '12px 16px',
-        transition: 'var(--t)',
+        padding: isCute ? '16px 20px' : '14px 20px',
         fontFamily: isCute ? "'Nunito',sans-serif" : "'Rajdhani',monospace",
       }}
     >
       {/* Top accent stripe */}
       <div
-        className="absolute inset-x-0 top-0"
+        className="absolute inset-x-0 top-0 transition-all duration-300"
         style={{
-          height: 2,
+          height: 3,
           background: isDone
-            ? 'linear-gradient(90deg,#34d399,#10b981)'
+            ? 'linear-gradient(90deg,#10b981,#059669)'
             : isError
-            ? 'linear-gradient(90deg,#f87171,#ef4444)'
+            ? 'linear-gradient(90deg,#ef4444,#dc2626)'
             : 'linear-gradient(90deg,var(--prog-a),var(--prog-b),var(--prog-c))',
-          opacity: 0.9,
+          opacity: 0.8,
         }}
       />
 
       {/* Hover ambient glow */}
       <div
-        className="absolute inset-0 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-300"
+        className="absolute inset-0 opacity-0 group-hover:opacity-10 pointer-events-none transition-opacity duration-500"
         style={{
-          background: `radial-gradient(ellipse 70% 60% at 50% 0%, var(--prog-glow), transparent)`,
+          background: `radial-gradient(circle at center, var(--prog-glow), transparent 70%)`,
           borderRadius: 'inherit',
-          opacity: 0,
         }}
-        onMouseEnter={(e) => { e.currentTarget.style.opacity = '1'; }}
-        onMouseLeave={(e) => { e.currentTarget.style.opacity = '0'; }}
       />
 
-      <div className="flex items-center gap-3 relative">
+      <div className="flex items-center gap-4 relative">
         {/* ── File type badge ─────────────────────────────────────────── */}
         <div
-          className="w-12 h-12 rounded-xl shrink-0 grid place-items-center font-black uppercase text-xs"
+          className="w-14 h-14 rounded-2xl shrink-0 grid place-items-center font-black uppercase text-xs shadow-lg transition-transform duration-300 group-hover:scale-110"
           style={{
-            background: isCute ? 'rgba(255,105,180,0.12)' : 'rgba(0,245,255,0.08)',
-            border: `1px solid ${isCute ? 'rgba(255,105,180,0.30)' : 'rgba(0,245,255,0.25)'}`,
+            background: isCute ? 'rgba(255,105,180,0.1)' : 'rgba(0,245,255,0.06)',
+            border: `1px solid ${isCute ? 'rgba(255,105,180,0.2)' : 'rgba(0,245,255,0.15)'}`,
             color: isCute ? '#ff69b4' : '#00f5ff',
             letterSpacing: '0.05em',
-            fontSize: 10,
-            fontWeight: 800,
-            boxShadow: isCute ? '0 0 10px rgba(255,105,180,0.20)' : '0 0 10px rgba(0,245,255,0.18)',
+            fontSize: 11,
+            fontWeight: 900,
             borderRadius: 'var(--card-radius-sm)',
           }}
         >
           {isCute ? (
-            // Cute: emoji icon based on type
-            { mp4:'🎬', mp3:'🎵', jpg:'🖼', png:'🖼', pdf:'📄', zip:'📦', exe:'⚙', webm:'🎬' }[ext] || '📁'
+            { mp4:'🎬', mkv:'🎬', webm:'🎬', mp3:'🎵', wav:'🎵', flac:'🎵', jpg:'🖼', png:'🖼', gif:'🖼', pdf:'📄', doc:'📄', docx:'📄', zip:'📦', rar:'📦', exe:'⚙', msi:'⚙' }[ext] || '📁'
           ) : (
-            ext.toUpperCase()
+            ext.length > 4 ? ext.slice(0, 3) + '..' : ext.toUpperCase()
           )}
         </div>
 
         {/* ── Info ───────────────────────────────────────────────────── */}
         <div className="flex-1 min-w-0">
           {/* Title + status */}
-          <div className="flex items-center gap-2 mb-1">
+          <div className="flex items-center justify-between mb-2">
             <div
-              className="truncate text-sm font-black"
-              style={{ color: 'var(--text-primary)', letterSpacing: isCute ? '0' : '0.01em' }}
+              className="truncate text-[15px] font-black tracking-tight flex-1"
+              style={{ color: 'var(--text-primary)' }}
+              title={d.filename}
             >
               {d.filename || (isCute ? 'Loading… 🌸' : 'LOADING...')}
             </div>
             <span
-              className="text-[10px] px-2 py-0.5 rounded-full font-black shrink-0 uppercase tracking-wide"
+              className="text-[9px] px-2.5 py-1 rounded-lg font-black shrink-0 uppercase tracking-widest border shadow-sm transition-all duration-300"
               style={{
-                background: `${statusColor}18`,
+                background: `${statusColor}10`,
                 color: statusColor,
-                border: `1px solid ${statusColor}40`,
-                borderRadius: 999,
+                borderColor: `${statusColor}30`,
               }}
             >
               {isCute ? statusLabel(d).replace('...','…') : statusLabel(d).toUpperCase()}
             </span>
           </div>
 
-          {/* URL */}
-          <div
-            className="text-[11px] truncate mb-2 font-semibold"
-            style={{ color: 'var(--text-muted)', fontFamily: isCute ? 'inherit' : "'Share Tech Mono',monospace" }}
-          >
-            {d.url}
-          </div>
-
           {/* ── Progress bar ─────────────────────────────────────────── */}
-          <div className="progress-track" style={{ height: isCute ? 8 : 5 }}>
+          <div className="progress-track mb-2" style={{ height: isCute ? 8 : 6, background: 'rgba(255,255,255,0.04)' }}>
             {isPost ? (
               <div
                 style={{
-                  width: '60%',
+                  width: '100%',
                   height: '100%',
                   borderRadius: 999,
                   background: 'linear-gradient(90deg,var(--prog-a),var(--prog-b),var(--prog-c))',
                   backgroundSize: '200% 100%',
-                  animation: 'shimmer 1.2s linear infinite',
-                  boxShadow: '0 0 16px var(--prog-glow)',
+                  animation: 'shimmer 1.5s linear infinite',
+                  opacity: 0.6,
                 }}
               />
             ) : (
@@ -138,48 +124,49 @@ export default function DownloadCard({ d, mode = 'sigma' }) {
 
           {/* ── Stats row ────────────────────────────────────────────── */}
           <div
-            className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-[11px] font-bold"
+            className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] font-bold"
             style={{ color: 'var(--text-muted)' }}
           >
             {!isPost && !isDone && (
-              <span style={{ color: 'var(--brand)' }}>{pct.toFixed(1)}%</span>
+              <span className="text-cyan-400 opacity-90">{pct.toFixed(1)}%</span>
             )}
             {!isPost && (
-              <span>{fmtBytes(d.downloaded)} / {fmtBytes(d.totalSize)}</span>
+              <span className="opacity-80 font-mono tracking-tighter">{fmtBytes(d.downloaded)} <span className="opacity-30">/</span> {fmtBytes(d.totalSize)}</span>
             )}
             {d.status === 'downloading' && !isPost && d.speed > 0 && (
               <span
-                style={{ color: 'var(--brand)', fontFamily: isCute ? 'inherit' : "'Share Tech Mono',monospace" }}
+                className="font-black px-1.5 py-0.5 rounded bg-white/5 border border-white/5"
+                style={{ color: 'var(--brand)' }}
               >
                 {fmtSpeed(d.speed)}
               </span>
             )}
             {d.status === 'downloading' && !isPost && d.eta > 0 && (
-              <span>ETA {fmtEta(d.eta)}</span>
+              <span className="opacity-80">ETA {fmtEta(d.eta)}</span>
             )}
             {isPost && (
               <span
-                className="font-black animate-pulse"
+                className="font-black animate-pulse uppercase tracking-wider"
                 style={{ color: 'var(--brand2)' }}
               >
-                {isCute ? 'Processing ✨' : 'PROCESSING...'}
+                {isCute ? 'Processing ✨' : 'Processing...'}
               </span>
             )}
             {isDone && (
-              <span className="font-black text-emerald-400">
-                {isCute ? `✓ Done! ${fmtBytes(d.totalSize)} 💕` : `✓ ${fmtBytes(d.totalSize)}`}
+              <span className="font-black text-emerald-400 flex items-center gap-1.5">
+                <span className="text-xs">✓</span> {isCute ? `Saved! ${fmtBytes(d.totalSize)}` : `COMPLETE [${fmtBytes(d.totalSize)}]`}
               </span>
             )}
             {isError && d.error && (
-              <span className="text-rose-400 truncate max-w-[220px]" title={d.error}>
-                {d.error.length > 60 ? d.error.slice(0, 60) + '…' : d.error}
+              <span className="text-rose-400 truncate max-w-[200px] border-b border-rose-400/20" title={d.error}>
+                {d.error}
               </span>
             )}
           </div>
         </div>
 
         {/* ── Action buttons ────────────────────────────────────────── */}
-        <div className="flex flex-col gap-1 shrink-0">
+        <div className="flex flex-col gap-1.5 shrink-0 ml-2">
           {(d.status === 'paused' || d.status === 'error') && (
             <ActionBtn onClick={() => api.resume(d.id)} title="Resume" isCute={isCute}>
               {isCute ? '▶' : '►'}

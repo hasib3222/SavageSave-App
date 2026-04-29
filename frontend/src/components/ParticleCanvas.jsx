@@ -38,11 +38,11 @@ export default function ParticleCanvas({ mode }) {
         : ['⚡', '◆', '▸', '◈'];
       return {
         x, y,
-        vx: (Math.random() - 0.5) * (isCute ? 0.8 : 1.2),
-        vy: isCute ? -(0.6 + Math.random() * 1.0) : (0.8 + Math.random() * 1.4),
+        vx: (Math.random() - 0.5) * (isCute ? 0.6 : 0.8),
+        vy: isCute ? -(0.4 + Math.random() * 0.8) : (0.6 + Math.random() * 1.0),
         life: 1,
-        decay: 0.003 + Math.random() * 0.005,
-        size: isCute ? 10 + Math.random() * 8 : 6 + Math.random() * 8,
+        decay: 0.002 + Math.random() * 0.003,
+        size: isCute ? 8 + Math.random() * 6 : 4 + Math.random() * 6,
         emoji: emojis[Math.floor(Math.random() * emojis.length)],
         isCute,
         // sigma only: dot trail
