@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import AppIcon from './AppIcon';
 import MONETIZATION, { setAdminConfig, resetToDefaults } from '../config/monetization';
