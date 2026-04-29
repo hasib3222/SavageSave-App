@@ -10,50 +10,66 @@ const { startBackend } = require('../backend/server');
 
 // Configure autoUpdater
 autoUpdater.autoDownload = true;
+autoUpdater.autoInstallOnAppQuit = true;
 autoUpdater.allowPrerelease = false;
+
+// Set up logger for updater
+autoUpdater.logger = require('electron-log');
+autoUpdater.logger.transports.file.level = 'info';
 
 function setupAutoUpdater() {
   autoUpdater.on('checking-for-update', () => {
     console.log('[Updater] Checking for update...');
+    // Optional: show a small toast or log in terminal if available
   });
 
   autoUpdater.on('update-available', (info) => {
     console.log('[Updater] Update available:', info.version);
-    if (mainWindow) {
-      dialog.showMessageBox(mainWindow, {
-        type: 'info',
-        title: 'Update Available',
-        message: `A new version (${info.version}) is available. It is being downloaded in the background.`,
-      });
-    }
+    dialog.showMessageBox(mainWindow, {
+      type: 'info',
+      title: 'Update Found',
+      message: `A new version (${info.version}) is available. It is downloading now.`,
+      buttons: ['OK']
+    });
   });
 
-  autoUpdater.on('update-not-available', () => {
-    console.log('[Updater] Update not available.');
+  autoUpdater.on('update-not-available', (info) => {
+    console.log('[Updater] Update not available. Current version:', app.getVersion());
   });
 
   autoUpdater.on('error', (err) => {
     console.error('[Updater] Error:', err);
+    if (mainWindow) {
+      dialog.showMessageBox(mainWindow, {
+        type: 'error',
+        title: 'Update Error',
+        message: 'The auto-updater encountered an error: ' + (err.message || err),
+        buttons: ['Dismiss']
+      });
+    }
   });
 
   autoUpdater.on('download-progress', (progressObj) => {
-    let log_message = "Download speed: " + progressObj.bytesPerSecond;
-    log_message = log_message + ' - Downloaded ' + progressObj.percent + '%';
-    log_message = log_message + ' (' + progressObj.transferred + "/" + progressObj.total + ")";
+    const log_message = `Download speed: ${(progressObj.bytesPerSecond / 1024).toFixed(2)} KB/s - Downloaded ${progressObj.percent.toFixed(2)}%`;
     console.log('[Updater]', log_message);
+    if (mainWindow) {
+      mainWindow.setProgressBar(progressObj.percent / 100);
+    }
   });
 
   autoUpdater.on('update-downloaded', (info) => {
     console.log('[Updater] Update downloaded');
+    if (mainWindow) mainWindow.setProgressBar(-1);
+    
     dialog.showMessageBox(mainWindow, {
       type: 'question',
-      buttons: ['Restart Now', 'Later'],
+      buttons: ['Restart and Install', 'Later'],
       defaultId: 0,
       title: 'Update Ready',
-      message: `Version ${info.version} has been downloaded and is ready to install. Restart now?`,
+      message: `Version ${info.version} has been downloaded and is ready to install. Restart the app to apply the update?`,
     }).then((result) => {
       if (result.response === 0) {
-        autoUpdater.quitAndInstall();
+        setImmediate(() => autoUpdater.quitAndInstall());
       }
     });
   });
