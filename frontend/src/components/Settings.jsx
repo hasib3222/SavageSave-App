@@ -266,9 +266,9 @@ function SettingsContent({ settings = {}, setSettings }) {
               </div>
               
               <div className="mt-4">
-                {updateState === 'checking' && <div className="text-[11px] font-black text-cyan-400 uppercase animate-pulse">Checking Repository...</div>}
-                {updateState === 'latest' && <div className="text-[11px] font-black text-emerald-400 uppercase">System is up to date</div>}
-                {updateState === 'available' && <div className="text-[11px] font-black text-blue-400 uppercase">Update {updateInfo?.version} detected</div>}
+                {updateState === 'checking' && <div className="text-[11px] font-black text-cyan-400 uppercase animate-pulse">Checking for updates...</div>}
+                {updateState === 'latest' && <div className="text-[11px] font-black text-emerald-400 uppercase">You are using latest version.</div>}
+                {updateState === 'available' && <div className="text-[11px] font-black text-blue-400 uppercase">New version v{updateInfo?.version} found. Downloading...</div>}
                 {updateState === 'progress' && (
                   <div className="mt-3 w-full max-w-sm">
                     <div className="flex justify-between text-[10px] font-black mb-1.5 uppercase opacity-60">
@@ -280,8 +280,8 @@ function SettingsContent({ settings = {}, setSettings }) {
                     </div>
                   </div>
                 )}
-                {updateState === 'downloaded' && <div className="text-[11px] font-black text-emerald-400 uppercase animate-bounce mt-1">Update Ready for Installation</div>}
-                {updateState === 'error' && <div className="text-[11px] font-black text-rose-400 uppercase">Sync Error: {updateErr}</div>}
+                {updateState === 'downloaded' && <div className="text-[11px] font-black text-emerald-400 uppercase animate-bounce mt-1">Restart & Install</div>}
+                {updateState === 'error' && <div className="text-[11px] font-black text-rose-400 uppercase">{updateErr}</div>}
               </div>
             </div>
 

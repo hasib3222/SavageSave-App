@@ -21,48 +21,58 @@ log.info('App starting...');
 
 function setupAutoUpdater() {
   const sendStatusToWindow = (type, data) => {
-    if (mainWindow) {
+    if (mainWindow && !mainWindow.isDestroyed()) {
       mainWindow.webContents.send('updater:message', { type, data });
     }
   };
 
   autoUpdater.on('checking-for-update', () => {
-    log.info('[Updater] Checking for update...');
-    sendStatusToWindow('checking');
+    log.info('[Updater] Checking for updates start...');
+    sendStatusToWindow('checking', 'Checking for updates...');
   });
 
   autoUpdater.on('update-available', (info) => {
-    log.info('[Updater] Update available:', info.version);
+    log.info('[Updater] Update found:', info.version);
     sendStatusToWindow('available', info);
-    dialog.showMessageBox(mainWindow, {
-      type: 'info',
-      title: 'Update Found',
-      message: `A new version (${info.version}) is available. It is downloading now.`,
-      buttons: ['OK']
-    });
+    
+    if (mainWindow) {
+      dialog.showMessageBox(mainWindow, {
+        type: 'info',
+        title: 'SavageSave Update Found',
+        message: `New version v${info.version} found. Downloading in the background...`,
+        buttons: ['OK']
+      });
+    }
   });
 
   autoUpdater.on('update-not-available', (info) => {
-    log.info('[Updater] Update not available. Current version:', app.getVersion());
-    sendStatusToWindow('latest', info);
+    log.info('[Updater] No update. Current version:', app.getVersion());
+    sendStatusToWindow('latest', 'You are using latest version.');
   });
 
   autoUpdater.on('error', (err) => {
-    log.error('[Updater] Error:', err);
-    sendStatusToWindow('error', err.message || err);
+    log.error('[Updater] Sync error:', err);
+    
+    let errorMsg = 'Could not check for updates. Please try again later.';
+    if (err.message && err.message.includes('404')) {
+      errorMsg = 'Update server not reachable (404).';
+    }
+
+    sendStatusToWindow('error', errorMsg);
+    
     if (mainWindow) {
       dialog.showMessageBox(mainWindow, {
         type: 'error',
         title: 'Update Error',
-        message: 'The auto-updater encountered an error: ' + (err.message || err),
+        message: errorMsg,
         buttons: ['Dismiss']
       });
     }
   });
 
   autoUpdater.on('download-progress', (progressObj) => {
-    const log_message = `Download speed: ${(progressObj.bytesPerSecond / 1024).toFixed(2)} KB/s - Downloaded ${progressObj.percent.toFixed(2)}%`;
-    log.info('[Updater]', log_message);
+    const percent = Math.round(progressObj.percent);
+    log.info(`[Updater] Downloading: ${percent}%`);
     sendStatusToWindow('progress', progressObj);
     if (mainWindow) {
       mainWindow.setProgressBar(progressObj.percent / 100);
@@ -70,19 +80,19 @@ function setupAutoUpdater() {
   });
 
   autoUpdater.on('update-downloaded', (info) => {
-    log.info('[Updater] Update downloaded');
+    log.info('[Updater] Download complete. Version:', info.version);
     if (mainWindow) mainWindow.setProgressBar(-1);
     sendStatusToWindow('downloaded', info);
     
     dialog.showMessageBox(mainWindow, {
       type: 'question',
-      buttons: ['Restart and Install', 'Later'],
+      buttons: ['Restart & Install', 'Later'],
       defaultId: 0,
       title: 'Update Ready',
-      message: `Version ${info.version} has been downloaded and is ready to install. Restart the app to apply the update?`,
+      message: `Version ${info.version} is ready. Restart & Install now?`,
     }).then((result) => {
       if (result.response === 0) {
-        log.info('[Updater] User chose to restart and install');
+        log.info('[Updater] Triggering quitAndInstall');
         setImmediate(() => autoUpdater.quitAndInstall());
       }
     });
