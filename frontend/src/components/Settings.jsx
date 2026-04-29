@@ -280,7 +280,7 @@ function SettingsContent({ settings = {}, setSettings }) {
                     </div>
                   </div>
                 )}
-                {updateState === 'downloaded' && <div className="text-[11px] font-black text-emerald-400 uppercase animate-bounce mt-1">Restart & Install</div>}
+                {updateState === 'downloaded' && <div className="text-[11px] font-black text-emerald-400 uppercase animate-bounce mt-1">v{updateInfo?.version} is ready to install</div>}
                 {updateState === 'error' && <div className="text-[11px] font-black text-rose-400 uppercase">{updateErr}</div>}
               </div>
             </div>

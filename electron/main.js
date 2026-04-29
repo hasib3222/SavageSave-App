@@ -30,6 +30,7 @@ function setupAutoUpdater() {
     }
   };
 
+  // Clean stale updates before starting check
   autoUpdater.on('checking-for-update', () => {
     log.info('[Updater] Checking for updates start...');
     sendStatusToWindow('checking', 'Checking for updates...');
@@ -58,8 +59,15 @@ function setupAutoUpdater() {
     log.error('[Updater] Sync error:', err);
     
     let errorMsg = 'Could not check for updates. Please try again later.';
-    if (err.message && err.message.includes('404')) {
-      errorMsg = 'Update server not reachable (404).';
+    const msg = String(err.message || err).toLowerCase();
+
+    if (msg.includes('net::err_internet_disconnected') || msg.includes('dns_probe_finished')) {
+      errorMsg = 'Check your internet connection.';
+    } else if (msg.includes('404')) {
+      errorMsg = 'Update server temporarily unavailable.';
+    } else if (msg.includes('not signed') || msg.includes('signature mismatch')) {
+      errorMsg = 'Update validation failed. Please download manually.';
+      log.error('[Updater] Signature block detected despite bypass. Manual intervention may be needed.');
     }
 
     sendStatusToWindow('error', errorMsg);
@@ -93,11 +101,19 @@ function setupAutoUpdater() {
       buttons: ['Restart & Install', 'Later'],
       defaultId: 0,
       title: 'Update Ready',
-      message: `Version ${info.version} is ready. Restart & Install now?`,
+      message: `Version ${info.version} has been downloaded and is ready to install. Restart the app to apply the update now?`,
     }).then((result) => {
       if (result.response === 0) {
-        log.info('[Updater] Triggering quitAndInstall');
-        setImmediate(() => autoUpdater.quitAndInstall());
+        log.info('[Updater] User chose Restart & Install. Closing all windows...');
+        // Close all windows except main to ensure clean exit
+        BrowserWindow.getAllWindows().forEach(w => {
+          if (w !== mainWindow) w.close();
+        });
+        
+        setImmediate(() => {
+          app.removeAllListeners('window-all-closed');
+          autoUpdater.quitAndInstall(false, true);
+        });
       }
     });
   });

@@ -1,6 +1,6 @@
 {
   "name": "savagesave",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "SavageSave Downloader — a world-class premium desktop download manager with multi-connection acceleration, video quality picker, smart scheduler, and built-in terminal.",
   "main": "electron/main.js",
   "scripts": {
