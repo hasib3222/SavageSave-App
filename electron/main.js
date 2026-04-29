@@ -13,6 +13,10 @@ autoUpdater.autoDownload = true;
 autoUpdater.autoInstallOnAppQuit = true;
 autoUpdater.allowPrerelease = false;
 
+// CRITICAL: Disable signature verification for unsigned indie builds
+// This prevents "New version is not signed by the application owner" error on Windows
+autoUpdater.isValidatorEnabled = false;
+
 // Set up logger for updater
 const log = require('electron-log');
 autoUpdater.logger = log;
