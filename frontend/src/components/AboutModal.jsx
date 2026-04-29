@@ -1,9 +1,35 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { APP_NAME, APP_VERSION_LABEL, APP_DEFAULT_CHANNEL } from '../config/version';
 import AppIcon from './AppIcon';
 
 export default function AboutModal({ open, onClose, channel = APP_DEFAULT_CHANNEL }) {
+  const [updateState, setUpdateState] = useState('idle');
+  const [updateInfo, setUpdateInfo] = useState(null);
+  const [updateProgress, setUpdateProgress] = useState(0);
+
+  useEffect(() => {
+    if (!open || !window.api?.onUpdateMessage) return;
+    
+    return window.api.onUpdateMessage(({ type, data }) => {
+      if (type === 'checking') setUpdateState('checking');
+      else if (type === 'available') { setUpdateState('available'); setUpdateInfo(data); }
+      else if (type === 'latest') setUpdateState('latest');
+      else if (type === 'progress') { setUpdateState('progress'); setUpdateProgress(data.percent); }
+      else if (type === 'downloaded') { setUpdateState('downloaded'); setUpdateInfo(data); }
+      else if (type === 'error') setUpdateState('error');
+    });
+  }, [open]);
+
+  const handleCheck = () => {
+    setUpdateState('checking');
+    window.api?.checkForUpdates?.();
+  };
+
+  const handleRestart = () => {
+    window.api?.quitAndInstall?.();
+  };
+
   return (
     <AnimatePresence>
       {open && (
@@ -53,18 +79,46 @@ export default function AboutModal({ open, onClose, channel = APP_DEFAULT_CHANNE
                 </div>
               </div>
 
-              <p className="mt-2 text-[11px] text-slate-500 max-w-[260px] leading-relaxed">
-                SavageSave v1.0.0
-              </p>
-              <p className="text-[11px] text-slate-500 max-w-[260px] leading-relaxed">
-                Created with Electron + React
-              </p>
+              <div className="w-full mt-4 p-3 rounded-xl bg-white/5 border border-white/10">
+                {updateState === 'downloaded' ? (
+                  <button
+                    onClick={handleRestart}
+                    className="w-full py-2 rounded-lg bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-xs font-black shadow-lg animate-pulse"
+                  >
+                    RESTART TO INSTALL
+                  </button>
+                ) : updateState === 'progress' ? (
+                  <div className="w-full">
+                    <div className="flex justify-between text-[10px] mb-1.5">
+                      <span className="text-cyan-300">Downloading Update...</span>
+                      <span className="text-white">{Math.round(updateProgress)}%</span>
+                    </div>
+                    <div className="h-1.5 w-full bg-black/20 rounded-full overflow-hidden">
+                      <div className="h-full bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,0.5)] transition-all duration-300" style={{ width: `${updateProgress}%` }} />
+                    </div>
+                  </div>
+                ) : (
+                  <button
+                    onClick={handleCheck}
+                    disabled={updateState === 'checking'}
+                    className="w-full py-2 rounded-lg bg-white/5 hover:bg-white/10 text-white text-xs font-bold transition-all disabled:opacity-50"
+                  >
+                    {updateState === 'checking' ? 'CHECKING...' : 
+                     updateState === 'latest' ? 'UP TO DATE ✅' : 
+                     updateState === 'available' ? 'UPDATE FOUND ⚡' : 'CHECK FOR UPDATES'}
+                  </button>
+                )}
+              </div>
+
+              <div className="mt-2 text-[10px] text-slate-500/60 leading-relaxed uppercase tracking-tighter">
+                Electron + React Production Build
+              </div>
 
               <button
                 onClick={onClose}
-                className="mt-3 px-5 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-violet-500 text-white text-sm font-medium shadow-turbo hover:shadow-[0_0_16px_rgba(56,189,248,0.4)] transition"
+                className="mt-3 px-8 py-2 rounded-xl bg-white/5 border border-white/10 text-slate-300 text-xs font-bold hover:bg-white/10 transition"
               >
-                Done
+                CLOSE
               </button>
             </div>
           </motion.div>

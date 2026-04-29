@@ -14,7 +14,50 @@ export default function Settings({ settings, setSettings }) {
   const [adminPass, setAdminPass] = useState('');
   const [adminVerified, setAdminVerified] = useState(false);
   const [adminError, setAdminError] = useState('');
+  
+  // Update system state
+  const [updateState, setUpdateState] = useState('idle'); // idle, checking, available, latest, progress, downloaded, error
+  const [updateInfo, setUpdateInfo] = useState(null);
+  const [updateProgress, setUpdateProgress] = useState(0);
+  const [updateErr, setUpdateErr] = useState('');
+
   const upd = (k, v) => setSettings((s) => ({ ...s, [k]: v }));
+
+  useEffect(() => {
+    if (!window.api?.onUpdateMessage) return;
+    
+    const unbind = window.api.onUpdateMessage(({ type, data }) => {
+      if (type === 'checking') {
+        setUpdateState('checking');
+        setUpdateErr('');
+      } else if (type === 'available') {
+        setUpdateState('available');
+        setUpdateInfo(data);
+      } else if (type === 'latest') {
+        setUpdateState('latest');
+      } else if (type === 'progress') {
+        setUpdateState('progress');
+        setUpdateProgress(data.percent);
+      } else if (type === 'downloaded') {
+        setUpdateState('downloaded');
+        setUpdateInfo(data);
+      } else if (type === 'error') {
+        setUpdateState('error');
+        setUpdateErr(data);
+      }
+    });
+
+    return unbind;
+  }, []);
+
+  const handleCheckUpdates = () => {
+    setUpdateState('checking');
+    window.api?.checkForUpdates?.();
+  };
+
+  const handleRestart = () => {
+    window.api?.quitAndInstall?.();
+  };
 
   const isAdminUser = user?.email === ADMIN_EMAIL;
 
@@ -128,6 +171,52 @@ export default function Settings({ settings, setSettings }) {
             <button onClick={() => setAuthOpen(true)} className="px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-violet-500 text-white text-sm font-medium shadow-turbo btn-turbo">Sign In</button>
           </div>
         )}
+      </div>
+
+      <div className="glass rounded-2xl p-5 mb-4">
+        <h3 className="font-medium mb-3">Software Updates</h3>
+        <div className="flex items-center justify-between">
+          <div>
+            <div className="text-sm">Current version: <span className="font-mono text-cyan-300">{APP_VERSION_LABEL}</span></div>
+            {updateState === 'checking' && <div className="text-[11px] text-cyan-400 mt-1 animate-pulse">Checking for updates...</div>}
+            {updateState === 'latest' && <div className="text-[11px] text-emerald-400 mt-1">You are using the latest version.</div>}
+            {updateState === 'available' && <div className="text-[11px] text-blue-400 mt-1">Version {updateInfo?.version} is available and downloading...</div>}
+            {updateState === 'progress' && (
+              <div className="mt-2 w-48">
+                <div className="flex justify-between text-[10px] mb-1">
+                  <span className="opacity-60">Downloading...</span>
+                  <span>{Math.round(updateProgress)}%</span>
+                </div>
+                <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+                  <div className="h-full bg-gradient-to-r from-cyan-500 to-blue-500 transition-all duration-300" style={{ width: `${updateProgress}%` }} />
+                </div>
+              </div>
+            )}
+            {updateState === 'downloaded' && <div className="text-[11px] text-emerald-400 mt-1">Update ready to install!</div>}
+            {updateState === 'error' && <div className="text-[11px] text-rose-400 mt-1">Error: {updateErr}</div>}
+          </div>
+
+          {updateState === 'downloaded' ? (
+            <button
+              onClick={handleRestart}
+              className="px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-sm font-bold shadow-lg hover:scale-105 active:scale-95 transition-all"
+            >
+              Restart & Install
+            </button>
+          ) : (
+            <button
+              disabled={updateState === 'checking' || updateState === 'progress'}
+              onClick={handleCheckUpdates}
+              className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+                updateState === 'checking' || updateState === 'progress'
+                  ? 'bg-white/5 text-white/30 cursor-not-allowed'
+                  : 'bg-white/10 hover:bg-white/20 text-white'
+              }`}
+            >
+              {updateState === 'checking' ? 'Checking...' : 'Check for Updates'}
+            </button>
+          )}
+        </div>
       </div>
 
       <div className="glass rounded-2xl p-5">

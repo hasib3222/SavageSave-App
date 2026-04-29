@@ -18,13 +18,20 @@ autoUpdater.logger = require('electron-log');
 autoUpdater.logger.transports.file.level = 'info';
 
 function setupAutoUpdater() {
+  const sendStatusToWindow = (type, data) => {
+    if (mainWindow) {
+      mainWindow.webContents.send('updater:message', { type, data });
+    }
+  };
+
   autoUpdater.on('checking-for-update', () => {
     console.log('[Updater] Checking for update...');
-    // Optional: show a small toast or log in terminal if available
+    sendStatusToWindow('checking');
   });
 
   autoUpdater.on('update-available', (info) => {
     console.log('[Updater] Update available:', info.version);
+    sendStatusToWindow('available', info);
     dialog.showMessageBox(mainWindow, {
       type: 'info',
       title: 'Update Found',
@@ -35,10 +42,12 @@ function setupAutoUpdater() {
 
   autoUpdater.on('update-not-available', (info) => {
     console.log('[Updater] Update not available. Current version:', app.getVersion());
+    sendStatusToWindow('latest', info);
   });
 
   autoUpdater.on('error', (err) => {
     console.error('[Updater] Error:', err);
+    sendStatusToWindow('error', err.message || err);
     if (mainWindow) {
       dialog.showMessageBox(mainWindow, {
         type: 'error',
@@ -52,6 +61,7 @@ function setupAutoUpdater() {
   autoUpdater.on('download-progress', (progressObj) => {
     const log_message = `Download speed: ${(progressObj.bytesPerSecond / 1024).toFixed(2)} KB/s - Downloaded ${progressObj.percent.toFixed(2)}%`;
     console.log('[Updater]', log_message);
+    sendStatusToWindow('progress', progressObj);
     if (mainWindow) {
       mainWindow.setProgressBar(progressObj.percent / 100);
     }
@@ -60,6 +70,7 @@ function setupAutoUpdater() {
   autoUpdater.on('update-downloaded', (info) => {
     console.log('[Updater] Update downloaded');
     if (mainWindow) mainWindow.setProgressBar(-1);
+    sendStatusToWindow('downloaded', info);
     
     dialog.showMessageBox(mainWindow, {
       type: 'question',
@@ -145,6 +156,14 @@ ipcMain.handle('shell:showInFolder', (_evt, p) => shell.showItemInFolder(p));
 
 // Expose backend port (renderer can query it explicitly)
 ipcMain.handle('app:getApiPort', () => backendPort);
+
+ipcMain.on('updater:check', () => {
+  autoUpdater.checkForUpdates();
+});
+
+ipcMain.on('updater:quitAndInstall', () => {
+  autoUpdater.quitAndInstall();
+});
 
 app.whenReady().then(() => {
   createWindow();
