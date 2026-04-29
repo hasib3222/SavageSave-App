@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../hooks/useAuth';
 import AppIcon from './AppIcon';
 import MONETIZATION, { setAdminConfig, resetToDefaults } from '../config/monetization';
@@ -7,7 +8,40 @@ import { APP_NAME, APP_VERSION_LABEL, APP_CHANNELS, APP_DEFAULT_CHANNEL } from '
 const ADMIN_EMAIL = 'hasiburrahman1382005@gmail.com';
 const ADMIN_PASSWORD_HASH = 'admin123'; // Simple hash for demo - use proper hashing in production
 
-export default function Settings({ settings, setSettings }) {
+class SettingsErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+  static getDerivedStateFromError(error) { return { hasError: true, error }; }
+  componentDidCatch(error, errorInfo) { console.error('Settings Error:', error, errorInfo); }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="flex-1 p-6 flex items-center justify-center bg-[#060911]">
+          <div className="glass p-8 max-w-md text-center border-rose-500/20 shadow-[0_0_50px_rgba(244,63,94,0.1)]">
+            <div className="w-16 h-16 bg-rose-500/10 rounded-2xl grid place-items-center mx-auto mb-4 border border-rose-500/20">
+              <span className="text-3xl">⚠️</span>
+            </div>
+            <h2 className="text-xl font-black text-rose-400 mb-2 uppercase tracking-tighter">Control Center Crash</h2>
+            <p className="text-sm opacity-60 mb-6 leading-relaxed">
+              The configuration module encountered a runtime error. This has been logged for repair.
+            </p>
+            <button 
+              onClick={() => window.location.reload()}
+              className="w-full py-3 rounded-xl bg-white/5 hover:bg-white/10 text-xs font-black uppercase tracking-widest border border-white/10 transition-all"
+            >
+              REBOOT MODULE
+            </button>
+          </div>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
+function SettingsContent({ settings = {}, setSettings }) {
   const { user, setAuthOpen, signOut } = useAuth();
   const [adminOpen, setAdminOpen] = useState(false);
   const [adminFlags, setAdminFlags] = useState({ ...MONETIZATION });
@@ -110,7 +144,7 @@ export default function Settings({ settings, setSettings }) {
             <div>
               <label className="text-[10px] font-black uppercase opacity-50 tracking-widest mb-2 block">Default Storage Path</label>
               <div className="flex gap-2">
-                <input value={settings.saveDir || ''} onChange={(e) => upd('saveDir', e.target.value)}
+                <input value={settings?.saveDir || ''} onChange={(e) => upd('saveDir', e.target.value)}
                   className="flex-1 bg-black/20 border border-white/10 rounded-xl px-4 py-2.5 text-sm font-medium focus:border-cyan-500/50 focus:bg-black/40 transition-all outline-none" />
                 <button onClick={pickDir} className="px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-xs font-bold transition-all border border-white/5 uppercase tracking-tighter">Browse</button>
               </div>
@@ -119,7 +153,7 @@ export default function Settings({ settings, setSettings }) {
             <div>
               <label className="text-[10px] font-black uppercase opacity-50 tracking-widest mb-2 block">Network Connections</label>
               <div className="flex items-center gap-4">
-                <input type="number" min={1} max={128} value={settings.connections}
+                <input type="number" min={1} max={128} value={settings?.connections || 8}
                   onChange={(e) => upd('connections', Number(e.target.value))}
                   className="w-24 bg-black/20 border border-white/10 rounded-xl px-4 py-2.5 text-sm font-bold focus:border-cyan-500/50 focus:bg-black/40 transition-all outline-none" />
                 <div className="text-[10px] opacity-40 leading-tight font-bold">MAX: 128 CONNS<br/>Optimized for speed</div>
@@ -132,11 +166,11 @@ export default function Settings({ settings, setSettings }) {
                   <div className="text-sm font-bold group-hover:text-cyan-300 transition-colors">Browser Cookies</div>
                   <div className="text-[10px] opacity-40">Access restricted content from your browser</div>
                 </div>
-                <Toggle checked={!!settings.cookieBrowser} onChange={() => upd('cookieBrowser', settings.cookieBrowser ? '' : 'edge')} />
+                <Toggle checked={!!settings?.cookieBrowser} onChange={() => upd('cookieBrowser', settings?.cookieBrowser ? '' : 'edge')} />
               </label>
               
               <AnimatePresence>
-                {settings.cookieBrowser && (
+                {settings?.cookieBrowser && (
                   <motion.div 
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: 'auto', opacity: 1 }}
@@ -146,7 +180,7 @@ export default function Settings({ settings, setSettings }) {
                     <div className="p-4 bg-black/20 rounded-xl border border-white/5">
                       <label className="text-[10px] font-black uppercase opacity-50 tracking-widest mb-2 block">Browser Engine</label>
                       <select
-                        value={settings.cookieBrowser}
+                        value={settings?.cookieBrowser}
                         onChange={(e) => upd('cookieBrowser', e.target.value)}
                         className="w-full bg-black/40 border border-white/10 rounded-lg px-3 py-2.5 text-xs font-bold outline-none cursor-pointer focus:border-cyan-500/50"
                       >
@@ -177,19 +211,19 @@ export default function Settings({ settings, setSettings }) {
             <ToggleItem 
               label="Clipboard Monitoring" 
               desc="Auto-detect links from clipboard"
-              checked={settings.clipboardMonitor} 
+              checked={!!settings?.clipboardMonitor} 
               onChange={(v) => upd('clipboardMonitor', v)} 
             />
             <ToggleItem 
               label="OS Notifications" 
               desc="Alert when downloads complete"
-              checked={settings.notifications} 
+              checked={!!settings?.notifications} 
               onChange={(v) => upd('notifications', v)} 
             />
             <ToggleItem 
               label="Smart Accelerator" 
               desc="Dynamic multi-threading"
-              checked={settings.smartAccel} 
+              checked={!!settings?.smartAccel} 
               onChange={(v) => upd('smartAccel', v)} 
             />
           </div>
@@ -293,7 +327,7 @@ export default function Settings({ settings, setSettings }) {
                         key={ch}
                         onClick={() => upd('releaseChannel', ch)}
                         className={`px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-tighter transition-all border ${
-                          (settings.releaseChannel || APP_DEFAULT_CHANNEL) === ch
+                          (settings?.releaseChannel || APP_DEFAULT_CHANNEL) === ch
                             ? 'bg-cyan-500/15 text-cyan-300 border-cyan-400/30'
                             : 'bg-white/5 text-slate-500 border-white/10 hover:text-slate-400'
                         }`}
@@ -382,6 +416,14 @@ export default function Settings({ settings, setSettings }) {
         </div>
       )}
     </div>
+  );
+}
+
+export default function Settings(props) {
+  return (
+    <SettingsErrorBoundary>
+      <SettingsContent {...props} />
+    </SettingsErrorBoundary>
   );
 }
 
