@@ -87,8 +87,8 @@ export default function Settings({ settings, setSettings }) {
   };
 
   return (
-    <div className="flex-1 overflow-auto p-6 custom-scrollbar grid-bg">
-      <div className="flex items-center gap-4 mb-6 stagger">
+    <div className="flex-1 overflow-y-auto p-6 grid-bg relative z-10">
+      <div className="flex items-center gap-4 mb-8">
         <div className="p-3 glass rounded-2xl shadow-xl">
           <AppIcon src="icon/main icon s.png" size={32} />
         </div>
@@ -98,15 +98,15 @@ export default function Settings({ settings, setSettings }) {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 stagger">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-7xl mx-auto">
         {/* Downloads Group */}
-        <div className="glass rounded-2xl p-6 border-white/5 shadow-2xl transition-all duration-300 hover:border-white/10">
-          <h3 className="font-black text-sm uppercase tracking-widest mb-5 opacity-90 flex items-center gap-2">
+        <section className="glass rounded-2xl p-6 border-white/5 shadow-2xl hover:border-white/10 transition-all">
+          <h3 className="font-black text-sm uppercase tracking-widest mb-6 opacity-90 flex items-center gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,0.8)]" />
             Downloads
           </h3>
           
-          <div className="space-y-5">
+          <div className="space-y-6">
             <div>
               <label className="text-[10px] font-black uppercase opacity-50 tracking-widest mb-2 block">Default Storage Path</label>
               <div className="flex gap-2">
@@ -122,7 +122,7 @@ export default function Settings({ settings, setSettings }) {
                 <input type="number" min={1} max={128} value={settings.connections}
                   onChange={(e) => upd('connections', Number(e.target.value))}
                   className="w-24 bg-black/20 border border-white/10 rounded-xl px-4 py-2.5 text-sm font-bold focus:border-cyan-500/50 focus:bg-black/40 transition-all outline-none" />
-                <div className="text-[10px] opacity-40 leading-tight">MAX: 128 CONNS<br/>Optimized for speed</div>
+                <div className="text-[10px] opacity-40 leading-tight font-bold">MAX: 128 CONNS<br/>Optimized for speed</div>
               </div>
             </div>
 
@@ -143,12 +143,12 @@ export default function Settings({ settings, setSettings }) {
                     exit={{ height: 0, opacity: 0 }}
                     className="overflow-hidden mt-3"
                   >
-                    <div className="p-3 bg-black/20 rounded-xl border border-white/5">
+                    <div className="p-4 bg-black/20 rounded-xl border border-white/5">
                       <label className="text-[10px] font-black uppercase opacity-50 tracking-widest mb-2 block">Browser Engine</label>
                       <select
                         value={settings.cookieBrowser}
                         onChange={(e) => upd('cookieBrowser', e.target.value)}
-                        className="w-full bg-black/40 border border-white/10 rounded-lg px-3 py-2 text-xs font-bold outline-none cursor-pointer focus:border-cyan-500/50"
+                        className="w-full bg-black/40 border border-white/10 rounded-lg px-3 py-2.5 text-xs font-bold outline-none cursor-pointer focus:border-cyan-500/50"
                       >
                         <option value="edge">Microsoft Edge</option>
                         <option value="chrome">Chrome</option>
@@ -164,11 +164,11 @@ export default function Settings({ settings, setSettings }) {
               </AnimatePresence>
             </div>
           </div>
-        </div>
+        </section>
 
         {/* Smart Features Group */}
-        <div className="glass rounded-2xl p-6 border-white/5 shadow-2xl transition-all duration-300 hover:border-white/10">
-          <h3 className="font-black text-sm uppercase tracking-widest mb-5 opacity-90 flex items-center gap-2">
+        <section className="glass rounded-2xl p-6 border-white/5 shadow-2xl hover:border-white/10 transition-all">
+          <h3 className="font-black text-sm uppercase tracking-widest mb-6 opacity-90 flex items-center gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-violet-400 shadow-[0_0_8px_rgba(167,139,250,0.8)]" />
             Automation
           </h3>
@@ -216,24 +216,25 @@ export default function Settings({ settings, setSettings }) {
               </div>
             )}
           </div>
-        </div>
+        </section>
 
         {/* Updates Card */}
-        <div className="glass rounded-2xl p-6 border-white/5 shadow-2xl transition-all duration-300 hover:border-white/10 lg:col-span-2">
+        <section className="glass rounded-2xl p-6 border-white/5 shadow-2xl hover:border-white/10 transition-all lg:col-span-2">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div className="flex-1">
-              <h3 className="font-black text-sm uppercase tracking-widest mb-2 opacity-90 flex items-center gap-2">
+              <h3 className="font-black text-sm uppercase tracking-widest mb-4 opacity-90 flex items-center gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
-                System Updates
+                Software Updates
               </h3>
-              <div className="text-sm font-bold">
-                Build Version <span className="font-mono text-cyan-300 px-2 py-0.5 bg-cyan-500/10 rounded border border-cyan-500/20 ml-2">{APP_VERSION_LABEL}</span>
+              <div className="flex items-center gap-3">
+                <span className="text-sm font-bold opacity-60">Build Version</span>
+                <span className="font-mono text-[11px] text-cyan-300 px-2 py-0.5 bg-cyan-500/10 rounded border border-cyan-500/20">{APP_VERSION_LABEL}</span>
               </div>
               
-              <div className="mt-3">
+              <div className="mt-4">
                 {updateState === 'checking' && <div className="text-[11px] font-black text-cyan-400 uppercase animate-pulse">Checking Repository...</div>}
-                {updateState === 'latest' && <div className="text-[11px] font-black text-emerald-400 uppercase">You are up to date</div>}
-                {updateState === 'available' && <div className="text-[11px] font-black text-blue-400 uppercase">Patch {updateInfo?.version} Pending Download...</div>}
+                {updateState === 'latest' && <div className="text-[11px] font-black text-emerald-400 uppercase">System is up to date</div>}
+                {updateState === 'available' && <div className="text-[11px] font-black text-blue-400 uppercase">Update {updateInfo?.version} detected</div>}
                 {updateState === 'progress' && (
                   <div className="mt-3 w-full max-w-sm">
                     <div className="flex justify-between text-[10px] font-black mb-1.5 uppercase opacity-60">
@@ -273,10 +274,10 @@ export default function Settings({ settings, setSettings }) {
               )}
             </div>
           </div>
-        </div>
+        </section>
 
         {/* About Card */}
-        <div className="glass rounded-2xl p-6 border-white/5 shadow-2xl transition-all duration-300 hover:border-white/10 lg:col-span-2 bg-gradient-to-br from-white/[0.02] to-transparent">
+        <section className="glass rounded-2xl p-6 border-white/5 shadow-2xl hover:border-white/10 lg:col-span-2 bg-gradient-to-br from-white/[0.02] to-transparent">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-5">
               <div className="w-16 h-16 glass rounded-2xl grid place-items-center shadow-2xl border-white/10">
@@ -317,12 +318,12 @@ export default function Settings({ settings, setSettings }) {
             SavageSave is a professional-grade multi-threaded download engine optimized for high-performance data retrieval. 
             Engineered with a focus on speed, reliability, and modern UI aesthetics. Built with Node.js, Electron, and React.
           </p>
-        </div>
+        </section>
       </div>
 
       {/* Admin Controls — Hidden unless verified */}
       {isAdminUser && (
-        <div className="mt-12 stagger">
+        <div className="mt-12 max-w-7xl mx-auto">
           <button
             onClick={() => setAdminOpen(!adminOpen)}
             className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] opacity-20 hover:opacity-50 transition-all ml-2"

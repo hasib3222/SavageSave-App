@@ -1,6 +1,6 @@
 {
   "name": "savagesave",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "SavageSave Downloader — a world-class premium desktop download manager with multi-connection acceleration, video quality picker, smart scheduler, and built-in terminal.",
   "main": "electron/main.js",
   "scripts": {
@@ -89,7 +89,7 @@
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "artifactName": "SavageSave Setup v${version}.exe",
+      "artifactName": "SavageSave-Setup-v${version}.exe",
       "uninstallDisplayName": "SavageSave",
       "license": ""
     }

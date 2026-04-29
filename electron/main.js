@@ -14,8 +14,10 @@ autoUpdater.autoInstallOnAppQuit = true;
 autoUpdater.allowPrerelease = false;
 
 // Set up logger for updater
-autoUpdater.logger = require('electron-log');
+const log = require('electron-log');
+autoUpdater.logger = log;
 autoUpdater.logger.transports.file.level = 'info';
+log.info('App starting...');
 
 function setupAutoUpdater() {
   const sendStatusToWindow = (type, data) => {
@@ -25,12 +27,12 @@ function setupAutoUpdater() {
   };
 
   autoUpdater.on('checking-for-update', () => {
-    console.log('[Updater] Checking for update...');
+    log.info('[Updater] Checking for update...');
     sendStatusToWindow('checking');
   });
 
   autoUpdater.on('update-available', (info) => {
-    console.log('[Updater] Update available:', info.version);
+    log.info('[Updater] Update available:', info.version);
     sendStatusToWindow('available', info);
     dialog.showMessageBox(mainWindow, {
       type: 'info',
@@ -41,12 +43,12 @@ function setupAutoUpdater() {
   });
 
   autoUpdater.on('update-not-available', (info) => {
-    console.log('[Updater] Update not available. Current version:', app.getVersion());
+    log.info('[Updater] Update not available. Current version:', app.getVersion());
     sendStatusToWindow('latest', info);
   });
 
   autoUpdater.on('error', (err) => {
-    console.error('[Updater] Error:', err);
+    log.error('[Updater] Error:', err);
     sendStatusToWindow('error', err.message || err);
     if (mainWindow) {
       dialog.showMessageBox(mainWindow, {
@@ -60,7 +62,7 @@ function setupAutoUpdater() {
 
   autoUpdater.on('download-progress', (progressObj) => {
     const log_message = `Download speed: ${(progressObj.bytesPerSecond / 1024).toFixed(2)} KB/s - Downloaded ${progressObj.percent.toFixed(2)}%`;
-    console.log('[Updater]', log_message);
+    log.info('[Updater]', log_message);
     sendStatusToWindow('progress', progressObj);
     if (mainWindow) {
       mainWindow.setProgressBar(progressObj.percent / 100);
@@ -68,7 +70,7 @@ function setupAutoUpdater() {
   });
 
   autoUpdater.on('update-downloaded', (info) => {
-    console.log('[Updater] Update downloaded');
+    log.info('[Updater] Update downloaded');
     if (mainWindow) mainWindow.setProgressBar(-1);
     sendStatusToWindow('downloaded', info);
     
@@ -80,6 +82,7 @@ function setupAutoUpdater() {
       message: `Version ${info.version} has been downloaded and is ready to install. Restart the app to apply the update?`,
     }).then((result) => {
       if (result.response === 0) {
+        log.info('[Updater] User chose to restart and install');
         setImmediate(() => autoUpdater.quitAndInstall());
       }
     });

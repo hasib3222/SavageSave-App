@@ -134,8 +134,8 @@ html.cute body {
 .glass {
   background: var(--bg-card);
   border: 1px solid var(--border-card);
-  backdrop-filter: blur(20px) saturate(160%);
-  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  backdrop-filter: blur(12px) saturate(160%);
+  -webkit-backdrop-filter: blur(12px) saturate(160%);
   border-radius: var(--card-radius);
   box-shadow: 0 8px 32px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.05);
   transition: var(--t), box-shadow 200ms ease;
@@ -342,10 +342,9 @@ html:not(.cute) .scanline::after {
 /* ── Grid bg (Sigma) ────────────────────────────────────────────────────── */
 html:not(.cute) .grid-bg {
   background-image:
-    linear-gradient(rgba(0,245,255,0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0,245,255,0.06) 1px, transparent 1px);
+    linear-gradient(rgba(0,245,255,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,245,255,0.04) 1px, transparent 1px);
   background-size: 50px 50px;
-  mask-image: radial-gradient(circle at center, black 40%, transparent 90%);
   animation: gridMove 20s linear infinite;
 }
 
