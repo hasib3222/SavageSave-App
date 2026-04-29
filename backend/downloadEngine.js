@@ -53,7 +53,7 @@ function probe(urlStr, maxRedirects = 5) {
           port: parsed.port,
           path: parsed.pathname + parsed.search,
           protocol: parsed.protocol,
-          headers: { 'User-Agent': 'TurboNest/1.0' },
+          headers: { 'User-Agent': 'SavageSave/1.0' },
         },
         (res) => {
           if ([301, 302, 303, 307, 308].includes(res.statusCode)) {
@@ -99,7 +99,7 @@ class Download extends EventEmitter {
     this.id = opts.id || crypto.randomBytes(6).toString('hex');
     this.url = opts.url;
     this.saveDir = opts.saveDir;
-    this.connections = Math.max(1, Math.min(32, opts.connections || 8));
+    this.connections = Math.max(1, Math.min(128, opts.connections || 8));
     this.desiredFilename = opts.filename;
 
     this.status = 'queued'; // queued | downloading | paused | completed | error | canceled
@@ -235,7 +235,7 @@ class Download extends EventEmitter {
       if (this._cancelRequested || this._pauseRequested) return resolve();
 
       const parsed = new URL(this.url);
-      const headers = { 'User-Agent': 'TurboNest/1.0' };
+      const headers = { 'User-Agent': 'SavageSave/1.0' };
       if (this.acceptsRanges) {
         const from = seg.start + seg.downloaded;
         headers['Range'] = `bytes=${from}-${seg.end}`;
@@ -323,7 +323,7 @@ class Download extends EventEmitter {
       const remaining = Math.max(0, this.totalSize - this.downloaded);
       this.eta = this.speed > 0 ? Math.round(remaining / this.speed) : 0;
       this.emit('update');
-    }, 500);
+    }, 200);
   }
 
   _stopSpeedTimer() {

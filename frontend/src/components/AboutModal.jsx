@@ -28,7 +28,7 @@ export default function AboutModal({ open, onClose, channel = APP_DEFAULT_CHANNE
 
             <div className="flex flex-col items-center gap-3">
               <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-500/20 to-violet-500/20 border border-white/10 flex items-center justify-center shadow-[0_0_20px_rgba(56,189,248,0.15)]">
-                <AppIcon src="/icon.png" size={48} />
+                <AppIcon src="icon/main icon s.png" size={48} />
               </div>
 
               <div className="text-2xl font-bold tracking-tight bg-gradient-to-r from-cyan-300 via-blue-300 to-violet-300 bg-clip-text text-transparent">
@@ -54,7 +54,10 @@ export default function AboutModal({ open, onClose, channel = APP_DEFAULT_CHANNE
               </div>
 
               <p className="mt-2 text-[11px] text-slate-500 max-w-[260px] leading-relaxed">
-                A world-class desktop download manager built with Node.js, Electron, React and Tailwind. Multi-threaded acceleration with smart video quality selection.
+                SavageSave v1.0.0
+              </p>
+              <p className="text-[11px] text-slate-500 max-w-[260px] leading-relaxed">
+                Created with Electron + React
               </p>
 
               <button

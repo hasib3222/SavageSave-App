@@ -1,5 +1,5 @@
 /**
- * TurboNest Subscription Plans
+ * SavageSave Subscription Plans
  * =====================================
  * Defines feature matrix for Free, Pro, and Ultra tiers.
  * Used by UI, enforcement hooks, and Supabase sync.

@@ -1,5 +1,5 @@
 /**
- * TurboNest Monetization Config
+ * SavageSave Monetization Config
  * =====================================
  * Single source of truth for all premium feature gates.
  * Toggle these flags to launch monetization.
@@ -25,7 +25,7 @@ const MONETIZATION = {
 
 /** Read persisted admin overrides from localStorage */
 try {
-  const raw = localStorage.getItem('turbonest-admin-config');
+  const raw = localStorage.getItem('savagesave-admin-config');
   if (raw) {
     const saved = JSON.parse(raw);
     Object.assign(MONETIZATION, saved);
@@ -36,7 +36,7 @@ try {
 export function setAdminConfig(patch) {
   Object.assign(MONETIZATION, patch);
   try {
-    localStorage.setItem('turbonest-admin-config', JSON.stringify(MONETIZATION));
+    localStorage.setItem('savagesave-admin-config', JSON.stringify(MONETIZATION));
   } catch { /* ignore */ }
 }
 
@@ -66,7 +66,7 @@ export function resetToDefaults() {
   };
   Object.assign(MONETIZATION, defaults);
   try {
-    localStorage.removeItem('turbonest-admin-config');
+    localStorage.removeItem('savagesave-admin-config');
   } catch { /* ignore */ }
 }
 

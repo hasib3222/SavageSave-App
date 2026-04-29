@@ -40,7 +40,7 @@ export function AuthProvider({ children }) {
 
   const resetPassword = async (email) => {
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: 'https://turbonest.app/reset',
+      redirectTo: 'https://savagesave.app/reset',
     });
     if (error) throw error;
   };

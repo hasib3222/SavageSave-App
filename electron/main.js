@@ -11,6 +11,10 @@ const { startBackend } = require('../backend/server');
 const pkg = require('../package.json');
 const APP_VERSION = pkg.version || '1.0.0';
 
+if (process.platform === 'win32') {
+  app.setAppUserModelId('com.savagesave.desktop');
+}
+
 let mainWindow;
 let backendPort = 0;
 
@@ -25,9 +29,9 @@ async function createWindow() {
     minWidth: 1100,
     minHeight: 700,
     backgroundColor: '#0b0f1a',
-    title: `TurboNest v${APP_VERSION}`,
+    title: 'SavageSave',
     frame: true,
-    icon: path.join(__dirname, '..', 'main icon.png'),
+    icon: path.join(__dirname, '..', 'icon', 'savagesave.ico'), // Electron auto-converts to ICO for Windows taskbar
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,

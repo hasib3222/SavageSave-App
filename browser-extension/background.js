@@ -1,5 +1,5 @@
-// TurboNest browser integration.
-// Adds a right-click "Send to TurboNest" on links.
+// SavageSave browser integration.
+// Adds a right-click "Send to SavageSave" on links.
 // NOTE: Because the Electron backend uses a random port, this extension
 // scans common ports 3000-3999 for the /api/defaults endpoint.
 
@@ -27,17 +27,17 @@ async function findPort() {
 
 chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.create({
-    id: 'turbonest-send-link',
-    title: 'Send to TurboNest',
+    id: 'savagesave-send-link',
+    title: 'Send to SavageSave',
     contexts: ['link'],
   });
 });
 
 chrome.contextMenus.onClicked.addListener(async (info) => {
-  if (info.menuItemId !== 'turbonest-send-link' || !info.linkUrl) return;
+  if (info.menuItemId !== 'savagesave-send-link' || !info.linkUrl) return;
   const port = await findPort();
   if (!port) {
-    chrome.notifications.create({ type: 'basic', title: 'TurboNest', message: 'App not running', iconUrl: 'icon.png' });
+    chrome.notifications.create({ type: 'basic', title: 'SavageSave', message: 'App not running', iconUrl: 'icon.png' });
     return;
   }
   try {
@@ -47,8 +47,8 @@ chrome.contextMenus.onClicked.addListener(async (info) => {
       body: JSON.stringify({ url: info.linkUrl }),
     });
     const d = await r.json();
-    chrome.notifications.create({ type: 'basic', title: 'TurboNest', message: 'Queued: ' + (d.filename || info.linkUrl), iconUrl: 'icon.png' });
+    chrome.notifications.create({ type: 'basic', title: 'SavageSave', message: 'Queued: ' + (d.filename || info.linkUrl), iconUrl: 'icon.png' });
   } catch (e) {
-    chrome.notifications.create({ type: 'basic', title: 'TurboNest error', message: String(e), iconUrl: 'icon.png' });
+    chrome.notifications.create({ type: 'basic', title: 'SavageSave error', message: String(e), iconUrl: 'icon.png' });
   }
 });

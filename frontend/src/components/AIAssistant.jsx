@@ -11,7 +11,7 @@ export default function AIAssistant({ items, onNewDownload }) {
     <div className="w-80 shrink-0 p-4 flex flex-col gap-3">
       <div className="glass rounded-2xl p-4 relative scanline">
         <div className="flex items-center gap-2">
-          <AppIcon src="/icon/ai assistent.png" size={36} className="rounded-xl shadow-turbo animate-glow" />
+          <AppIcon src="icon/ai assistent.png" size={36} className="rounded-xl shadow-turbo animate-glow" />
           <div>
             <div className="text-sm font-medium">AI Assistant</div>
             <div className="text-[11px] opacity-60">Smart suggestions</div>

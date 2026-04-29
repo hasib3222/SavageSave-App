@@ -52,7 +52,7 @@ function startBackend() {
     });
 
     // Prefetch yt-dlp binary in the background so first video download is snappy.
-    ensureYtDlp().catch((e) => console.warn('[TurboNest] yt-dlp prefetch failed:', e.message));
+    ensureYtDlp().catch((e) => console.warn('[SavageSave] yt-dlp prefetch failed:', e.message));
 
     // --- Scheduler ---
     app.get('/api/schedule', (_req, res) => res.json(scheduler.list()));
@@ -111,7 +111,7 @@ function startBackend() {
     const server = app.listen(0, '127.0.0.1', () => {
       const port = server.address().port;
       // eslint-disable-next-line no-console
-      console.log(`[TurboNest backend] listening on http://127.0.0.1:${port}`);
+      console.log(`[SavageSave backend] listening on http://127.0.0.1:${port}`);
       resolve({ port, app, manager, scheduler });
     });
   });

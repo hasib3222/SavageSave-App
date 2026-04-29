@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "TurboNest Integration",
+  "name": "SavageSave Integration",
   "version": "1.0.0",
-  "description": "Send any link to TurboNest with a right-click.",
+  "description": "Send any link to SavageSave Downloader with a right-click.",
   "permissions": ["contextMenus", "activeTab", "notifications"],
   "host_permissions": ["http://127.0.0.1/*"],
   "background": { "service_worker": "background.js" },

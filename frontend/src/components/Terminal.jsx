@@ -15,7 +15,7 @@ import { APP_VERSION_LABEL } from '../config/version';
 //   open <id|name>
 export default function Terminal({ items, onAdd, setTheme, defaultDir }) {
   const [lines, setLines] = useState([
-    { t: 'sys', v: `TurboNest Terminal ${APP_VERSION_LABEL} — type \`help\` for commands` },
+    { t: 'sys', v: `SavageSave Console ${APP_VERSION_LABEL} — type \`help\` for commands` },
   ]);
   const [input, setInput] = useState('');
   const [history, setHistory] = useState([]);
@@ -108,7 +108,7 @@ export default function Terminal({ items, onAdd, setTheme, defaultDir }) {
         <span className="w-2.5 h-2.5 rounded-full bg-pink-400 shadow-[0_0_8px_#f472b6]"></span>
         <span className="w-2.5 h-2.5 rounded-full bg-amber-300"></span>
         <span className="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
-        <span className="ml-2 opacity-70 tracking-widest">TERMINAL</span>
+        <span className="ml-2 opacity-70 tracking-widest">CONSOLE</span>
         <span className="ml-auto opacity-50">Ctrl+` to toggle</span>
         <button onClick={() => setOpen(!open)} className="px-2 opacity-70 hover:opacity-100">{open ? '▾' : '▴'}</button>
       </div>
@@ -128,7 +128,7 @@ export default function Terminal({ items, onAdd, setTheme, defaultDir }) {
             <div ref={endRef} />
           </div>
           <form onSubmit={submit} className="flex items-center gap-2 border-t border-white/10 px-3 py-2">
-            <span className="text-blue-300">turbo&gt;</span>
+            <span className="text-blue-300">savage&gt;</span>
             <input
               autoFocus
               value={input}

@@ -23,7 +23,7 @@ export default function AuthModal() {
           className="glass rounded-2xl p-6 w-full max-w-sm"
         >
           <div className="text-center">
-            <img src="/icon.png" alt="TurboNest" className="w-16 h-16 mx-auto rounded-2xl shadow-turbo mb-4 object-contain" />
+            <img src="/icon/main icon s.png" alt="SavageSave" className="w-16 h-16 mx-auto rounded-2xl shadow-turbo mb-4 object-contain" />
             <h2 className="text-xl font-bold">Already Signed In</h2>
             <p className="text-sm opacity-70 mt-1">{user.email}</p>
             <button
@@ -84,8 +84,8 @@ export default function AuthModal() {
         </button>
 
         <div className="text-center mb-6">
-          <img src="/icon.png" alt="TurboNest" className="w-12 h-12 mx-auto rounded-2xl shadow-turbo mb-3 object-contain" />
-          <h2 className="text-xl font-bold">TurboNest</h2>
+          <img src="/icon/main icon s.png" alt="SavageSave" className="w-12 h-12 mx-auto rounded-2xl shadow-turbo mb-3 object-contain" />
+          <h2 className="text-xl font-bold">SavageSave</h2>
           <p className="text-xs opacity-60 mt-1">Download Smarter, Faster</p>
         </div>
 

@@ -1,5 +1,5 @@
 /**
- * TurboNest Backend Throttle API
+ * SavageSave Backend Throttle API
  * ================================
  * Provides speed-cap configuration endpoints.
  * Wires into downloadEngine.js when monetization_enabled = true.
@@ -24,7 +24,7 @@ function getSpeedCapForUser(/* userId, planId */) {
  * Express middleware-style: attach throttle config to request.
  */
 function attachThrottleConfig(req, res, next) {
-  req.turbonestThrottle = {
+  req.savagesaveThrottle = {
     enabled: MONETIZATION_ENABLED,
     capMbps: getSpeedCapForUser(req.user?.id),
   };

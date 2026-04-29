@@ -1,4 +1,4 @@
-# ⚡ TurboNest
+# ⚡ SavageSave
 
 A world-class premium desktop download manager built for speed. Dark cyber UI with glassmorphism, multi-connection HTTP Range acceleration, video quality picker, smart scheduler, and more.
 Built with **Electron + React + Tailwind + Node.js/Express**, featuring real multi-connection
@@ -68,7 +68,7 @@ download manager project/
 │           ├── Settings.jsx
 │           ├── Scheduler.jsx
 │           └── Notifications.jsx
-├── browser-extension/        Optional MV3 "Send to TurboNest"
+├── browser-extension/        Optional MV3 "Send to SavageSave"
 ├── vite.config.mjs
 ├── tailwind.config.cjs
 ├── postcss.config.cjs
@@ -132,7 +132,7 @@ Shortcuts:
 
 1. Open `chrome://extensions`, enable **Developer mode**.
 2. **Load unpacked** → select `browser-extension/`.
-3. Right-click any link → **Send to TurboNest**. The app must be running.
+3. Right-click any link → **Send to SavageSave**. The app must be running.
 
 (Replace `browser-extension/icon.png` with your own 128×128 icon before publishing.)
 

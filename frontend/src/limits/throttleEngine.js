@@ -1,5 +1,5 @@
 /**
- * TurboNest Speed Throttle Engine
+ * SavageSave Speed Throttle Engine
  * =====================================
  * Real bandwidth throttling for capped plans.
  * Applied at the chunk-download level in backend/downloadEngine.js.

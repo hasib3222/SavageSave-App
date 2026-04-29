@@ -1,14 +1,16 @@
 {
-  "name": "turbonest",
+  "name": "savagesave",
   "version": "1.0.0",
-  "description": "TurboNest — a world-class premium desktop download manager with multi-connection acceleration, video quality picker, smart scheduler, and built-in terminal.",
+  "description": "SavageSave Downloader — a world-class premium desktop download manager with multi-connection acceleration, video quality picker, smart scheduler, and built-in terminal.",
   "main": "electron/main.js",
   "scripts": {
     "dev": "concurrently -k \"npm:dev:vite\" \"npm:dev:electron\"",
     "dev:vite": "vite",
     "dev:electron": "wait-on http://localhost:5173 && cross-env NODE_ENV=development ELECTRON_RUN_AS_NODE= electron .",
     "build": "vite build",
-    "start": "electron ."
+    "start": "electron .",
+    "dist": "npm run build && electron-builder",
+    "dist:win": "npm run build && electron-builder --win"
   },
   "author": "Senior SWE",
   "license": "MIT",
@@ -25,11 +27,58 @@
     "concurrently": "^8.2.2",
     "cross-env": "^7.0.3",
     "electron": "^30.0.9",
+    "electron-builder": "^24.13.3",
     "postcss": "^8.4.38",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "tailwindcss": "^3.4.4",
     "vite": "^5.2.13",
     "wait-on": "^7.2.0"
+  },
+  "build": {
+    "appId": "com.savagesave.desktop",
+    "productName": "SavageSave",
+    "copyright": "Copyright © 2026 SavageSave",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "electron/**/*",
+      "backend/**/*",
+      "frontend/dist/**/*",
+      "icon/**/*",
+      "package.json"
+    ],
+    "asarUnpack": [
+      "node_modules/ffmpeg-static/**/*"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        },
+        {
+          "target": "portable",
+          "arch": ["x64"]
+        }
+      ],
+      "icon": "icon/savagesave.ico",
+      "executableName": "SavageSave",
+      "signAndEditExecutable": false,
+      "publisherName": "SavageSave"
+    },
+    "portable": {
+      "artifactName": "SavageSave.exe"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "artifactName": "SavageSave Setup v${version}.exe",
+      "uninstallDisplayName": "SavageSave",
+      "license": ""
+    }
   }
 }

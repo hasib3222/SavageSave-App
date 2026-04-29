@@ -4,11 +4,33 @@ import AppIcon from './AppIcon';
 import MONETIZATION, { setAdminConfig, resetToDefaults } from '../config/monetization';
 import { APP_NAME, APP_VERSION_LABEL, APP_CHANNELS, APP_DEFAULT_CHANNEL } from '../config/version';
 
+const ADMIN_EMAIL = 'hasiburrahman1382005@gmail.com';
+const ADMIN_PASSWORD_HASH = 'admin123'; // Simple hash for demo - use proper hashing in production
+
 export default function Settings({ settings, setSettings }) {
   const { user, setAuthOpen, signOut } = useAuth();
   const [adminOpen, setAdminOpen] = useState(false);
   const [adminFlags, setAdminFlags] = useState({ ...MONETIZATION });
+  const [adminPass, setAdminPass] = useState('');
+  const [adminVerified, setAdminVerified] = useState(false);
+  const [adminError, setAdminError] = useState('');
   const upd = (k, v) => setSettings((s) => ({ ...s, [k]: v }));
+
+  const isAdminUser = user?.email === ADMIN_EMAIL;
+
+  const verifyAdmin = () => {
+    if (!isAdminUser) {
+      setAdminError('Not authorized');
+      return;
+    }
+    if (adminPass === 'savagesave2024') {
+      setAdminVerified(true);
+      setAdminError('');
+    } else {
+      setAdminError('Invalid password');
+      setAdminVerified(false);
+    }
+  };
 
   const toggleAdmin = (key) => {
     const next = { ...adminFlags, [key]: !adminFlags[key] };
@@ -24,8 +46,11 @@ export default function Settings({ settings, setSettings }) {
   return (
     <div className="flex-1 overflow-auto p-6">
       <div className="flex items-center gap-3 mb-4">
-        <AppIcon src="/icon/setting.png" size={28} />
-        <h1 className="text-2xl font-bold bg-gradient-to-r from-cyan-300 via-blue-300 to-violet-300 bg-clip-text text-transparent">Settings</h1>
+        <AppIcon src="icon/main icon s.png" size={28} />
+        <div>
+          <h1 className="text-2xl font-bold bg-gradient-to-r from-cyan-300 via-blue-300 to-violet-300 bg-clip-text text-transparent">Settings</h1>
+          <div className="text-[11px] opacity-60">SavageSave v1.0.0 · Created with Electron + React</div>
+        </div>
       </div>
 
       <div className="glass rounded-2xl p-5 mb-4">
@@ -37,7 +62,7 @@ export default function Settings({ settings, setSettings }) {
           <button onClick={pickDir} className="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-sm">Browse…</button>
         </div>
         <label className="text-xs opacity-70 mt-4 block">Default connections</label>
-        <input type="number" min={1} max={32} value={settings.connections}
+        <input type="number" min={1} max={128} value={settings.connections}
           onChange={(e) => upd('connections', Number(e.target.value))}
           className="mt-1 w-32 bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm" />
 
@@ -68,7 +93,7 @@ export default function Settings({ settings, setSettings }) {
             </select>
           </>
         )}
-        <p className="text-[10px] opacity-50 mt-2">When enabled, TurboNest reads cookies from your chosen browser to access age-restricted or subscriber-only videos. Public videos download fine without this.</p>
+        <p className="text-[10px] opacity-50 mt-2">When enabled, SavageSave reads cookies from your chosen browser to access age-restricted or subscriber-only videos. Public videos download fine without this.</p>
       </div>
 
       <div className="glass rounded-2xl p-5 mb-4">
@@ -149,47 +174,71 @@ export default function Settings({ settings, setSettings }) {
         <p className="text-sm opacity-60">World-class desktop download manager built with Node.js + Electron + React + Tailwind. Multi-threaded HTTP Range downloads with live telemetry and smart video quality selection.</p>
       </div>
 
-      {/* Admin Controls — Collapsible */}
-      <div className="mt-4">
-        <button
-          onClick={() => setAdminOpen(!adminOpen)}
-          className="flex items-center gap-2 text-[11px] opacity-40 hover:opacity-70 transition"
-        >
-          <span>{adminOpen ? '▼' : '▶'}</span>
-          <span>Admin Controls</span>
-          <span className="text-[9px] opacity-50">(dev only)</span>
-        </button>
+      {/* Admin Controls — Hidden unless verified */}
+      {isAdminUser && (
+        <div className="mt-4">
+          <button
+            onClick={() => setAdminOpen(!adminOpen)}
+            className="flex items-center gap-2 text-[11px] opacity-30 hover:opacity-60 transition"
+          >
+            <span>{adminOpen ? '▼' : '▶'}</span>
+            <span className="font-mono tracking-tight">··</span>
+          </button>
 
-        {adminOpen && (
-          <div className="glass rounded-2xl p-5 mt-2 border border-white/5">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="font-medium text-sm">Monetization Gates</h3>
-              <button
-                onClick={() => { resetToDefaults(); setAdminFlags({ ...MONETIZATION }); }}
-                className="text-[11px] px-2 py-1 rounded-lg bg-white/5 hover:bg-white/10 transition"
-              >
-                Reset All
-              </button>
-            </div>
-            <div className="space-y-2">
-              {Object.entries(adminFlags).map(([key, val]) => (
-                <label key={key} className="flex items-center justify-between py-1 cursor-pointer">
-                  <span className="text-xs opacity-70 font-mono">{key}</span>
-                  <span
-                    onClick={() => toggleAdmin(key)}
-                    className={`w-8 h-4 rounded-full relative transition ${val ? 'bg-gradient-to-r from-cyan-500 to-violet-500' : 'bg-white/10'}`}
+          {adminOpen && (
+            <div className="glass rounded-2xl p-5 mt-2 border border-white/5">
+              {!adminVerified ? (
+                <div className="space-y-3">
+                  <h3 className="font-medium text-sm opacity-70">Restricted Access</h3>
+                  <input
+                    type="password"
+                    placeholder="Enter admin password"
+                    value={adminPass}
+                    onChange={(e) => setAdminPass(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && verifyAdmin()}
+                    className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm"
+                  />
+                  {adminError && <div className="text-xs text-rose-400">{adminError}</div>}
+                  <button
+                    onClick={verifyAdmin}
+                    className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-sm transition"
                   >
-                    <span className={`absolute top-0.5 ${val ? 'left-4' : 'left-0.5'} w-3 h-3 bg-white rounded-full transition-all shadow`} />
-                  </span>
-                </label>
-              ))}
+                    Verify
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="font-medium text-sm text-cyan-300">Admin Controls</h3>
+                    <button
+                      onClick={() => { resetToDefaults(); setAdminFlags({ ...MONETIZATION }); }}
+                      className="text-[11px] px-2 py-1 rounded-lg bg-white/5 hover:bg-white/10 transition"
+                    >
+                      Reset All
+                    </button>
+                  </div>
+                  <div className="space-y-2">
+                    {Object.entries(adminFlags).map(([key, val]) => (
+                      <label key={key} className="flex items-center justify-between py-1 cursor-pointer">
+                        <span className="text-xs opacity-70 font-mono">{key}</span>
+                        <span
+                          onClick={() => toggleAdmin(key)}
+                          className={`w-8 h-4 rounded-full relative transition ${val ? 'bg-gradient-to-r from-cyan-500 to-violet-500' : 'bg-white/10'}`}
+                        >
+                          <span className={`absolute top-0.5 ${val ? 'left-4' : 'left-0.5'} w-3 h-3 bg-white rounded-full transition-all shadow`} />
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+                  <div className="mt-3 text-[10px] opacity-40">
+                    Changes persist in localStorage. Restart app after toggling monetization_enabled for full backend sync.
+                  </div>
+                </>
+              )}
             </div>
-            <div className="mt-3 text-[10px] opacity-40">
-              Changes persist in localStorage and take effect immediately. Restart app after toggling monetization_enabled for full backend sync.
-            </div>
-          </div>
-        )}
-      </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

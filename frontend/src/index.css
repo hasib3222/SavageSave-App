@@ -1,47 +1,151 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   SavageSave v2 — Dual Mode Design System
+   ⚡ SIGMA: dark hacker neon    🌸 CUTE: kawaii pink paradise
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Nunito:wght@400;500;600;700;800;900&family=Share+Tech+Mono&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Global futuristic base */
+/* ── SIGMA TOKENS (default) ─────────────────────────────────────────────── */
+:root {
+  /* Colors */
+  --brand:          #00f5ff;
+  --brand2:         #3b82f6;
+  --brand3:         #7c3aed;
+  --accent-hot:     #ff0066;
+
+  /* Backgrounds */
+  --bg-base:        #060911;
+  --bg-panel:       rgba(0, 245, 255, 0.025);
+  --bg-card:        rgba(0, 245, 255, 0.04);
+  --bg-hover:       rgba(0, 245, 255, 0.08);
+
+  /* Borders */
+  --border:         rgba(0, 245, 255, 0.12);
+  --border-active:  rgba(0, 245, 255, 0.55);
+  --border-card:    rgba(0, 245, 255, 0.10);
+
+  /* Text */
+  --text-primary:   #e8f4ff;
+  --text-muted:     rgba(148, 190, 220, 0.60);
+  --text-accent:    #00f5ff;
+
+  /* Progress */
+  --prog-a:         #00f5ff;
+  --prog-b:         #3b82f6;
+  --prog-c:         #7c3aed;
+  --prog-glow:      rgba(0, 245, 255, 0.5);
+
+  /* Glows */
+  --glow-sm:        0 0 12px rgba(0,245,255,0.35);
+  --glow-md:        0 0 24px rgba(0,245,255,0.40), 0 0 8px rgba(59,130,246,0.25);
+  --glow-lg:        0 0 40px rgba(0,245,255,0.45), 0 0 16px rgba(59,130,246,0.30);
+
+  /* Buttons */
+  --btn-grad:       linear-gradient(135deg, #00f5ff 0%, #3b82f6 50%, #7c3aed 100%);
+  --btn-shadow:     0 4px 24px rgba(0,245,255,0.35);
+
+  /* Sidebar */
+  --sidebar-active: rgba(0,245,255,0.08);
+  --sidebar-bar:    linear-gradient(180deg, #00f5ff, #3b82f6);
+
+  /* Mode */
+  --mode-font:      'Rajdhani', 'Share Tech Mono', monospace;
+  --card-radius:    16px;
+  --card-radius-sm: 10px;
+
+  /* Transition speed for mode switch */
+  --t: all 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ── CUTE TOKENS (html.cute class) ─────────────────────────────────────── */
+html.cute {
+  --brand:          #ff69b4;
+  --brand2:         #c084fc;
+  --brand3:         #fb7185;
+  --accent-hot:     #ff85c0;
+
+  --bg-base:        #12040e;
+  --bg-panel:       rgba(255, 105, 180, 0.035);
+  --bg-card:        rgba(255, 105, 180, 0.06);
+  --bg-hover:       rgba(255, 105, 180, 0.10);
+
+  --border:         rgba(255, 105, 180, 0.15);
+  --border-active:  rgba(255, 105, 180, 0.60);
+  --border-card:    rgba(255, 105, 180, 0.12);
+
+  --text-primary:   #ffe8f5;
+  --text-muted:     rgba(255, 180, 220, 0.60);
+  --text-accent:    #ff69b4;
+
+  --prog-a:         #ff69b4;
+  --prog-b:         #c084fc;
+  --prog-c:         #fb7185;
+  --prog-glow:      rgba(255, 105, 180, 0.55);
+
+  --glow-sm:        0 0 12px rgba(255,105,180,0.40);
+  --glow-md:        0 0 24px rgba(255,105,180,0.45), 0 0 8px rgba(192,132,252,0.30);
+  --glow-lg:        0 0 40px rgba(255,105,180,0.50), 0 0 16px rgba(192,132,252,0.35);
+
+  --btn-grad:       linear-gradient(135deg, #ff69b4 0%, #c084fc 50%, #fb7185 100%);
+  --btn-shadow:     0 4px 24px rgba(255,105,180,0.40);
+
+  --sidebar-active: rgba(255,105,180,0.10);
+  --sidebar-bar:    linear-gradient(180deg, #ff69b4, #c084fc);
+
+  --mode-font:      'Nunito', system-ui, sans-serif;
+  --card-radius:    24px;
+  --card-radius-sm: 16px;
+}
+
+/* ── Base ─────────────────────────────────────────────────────────────────── */
 html, body, #root { height: 100%; }
 
 body {
-  background:
-    radial-gradient(1200px 600px at 10% -10%, rgba(34,211,238,0.10), transparent 60%),
-    radial-gradient(1000px 500px at 110% 20%, rgba(59,130,246,0.12), transparent 60%),
-    radial-gradient(900px 500px at 50% 120%, rgba(167,139,250,0.10), transparent 60%),
-    #0b0f1a;
+  font-family: var(--mode-font);
+  color: var(--text-primary);
+  background: var(--bg-base);
+  transition: background 0.55s ease, color 0.55s ease, font-family 0.3s ease;
+  overflow: hidden;
 }
 
-/* Light mode override */
-html:not(.dark) body {
+/* Sigma background: dark void + neon radial aurora */
+html:not(.cute) body {
   background:
-    radial-gradient(1000px 500px at 10% -10%, rgba(34,211,238,0.14), transparent 60%),
-    radial-gradient(900px 500px at 110% 10%, rgba(59,130,246,0.14), transparent 60%),
-    #f6f8ff;
-  color: #0f172a;
+    radial-gradient(ellipse 900px 500px at 0%   0%,   rgba(0,245,255,0.06),  transparent 65%),
+    radial-gradient(ellipse 700px 400px at 100% 30%,  rgba(59,130,246,0.08), transparent 65%),
+    radial-gradient(ellipse 600px 400px at 60%  100%, rgba(124,58,237,0.06), transparent 65%),
+    #060911;
 }
 
-/* Glassmorphism card */
+/* Cute background: deep night-pink aurora */
+html.cute body {
+  background:
+    radial-gradient(ellipse 900px 500px at 0%   0%,   rgba(255,105,180,0.08), transparent 65%),
+    radial-gradient(ellipse 700px 400px at 100% 30%,  rgba(192,132,252,0.08), transparent 65%),
+    radial-gradient(ellipse 600px 400px at 60%  100%, rgba(251,113,133,0.06), transparent 65%),
+    #12040e;
+}
+
+/* ── Glass card ──────────────────────────────────────────────────────────── */
 .glass {
-  background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
-  border: 1px solid rgba(255,255,255,0.08);
-  backdrop-filter: blur(16px) saturate(150%);
-  -webkit-backdrop-filter: blur(16px) saturate(150%);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.35);
-  transition: transform 220ms ease-out, box-shadow 220ms ease-out, border-color 220ms ease-out;
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  border-radius: var(--card-radius);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.05);
+  transition: var(--t), box-shadow 200ms ease;
 }
 .glass:hover {
-  border-color: rgba(255,255,255,0.14);
-  box-shadow: 0 12px 40px rgba(0,0,0,0.45);
-}
-html:not(.dark) .glass {
-  background: linear-gradient(180deg, rgba(255,255,255,0.75), rgba(255,255,255,0.55));
-  border: 1px solid rgba(15,23,42,0.08);
-  box-shadow: 0 8px 24px rgba(15,23,42,0.08);
+  border-color: var(--border-active);
+  box-shadow: var(--glow-md), 0 8px 32px rgba(0,0,0,0.50), inset 0 1px 0 rgba(255,255,255,0.07);
 }
 
-/* Premium progress bar */
+/* ── Progress bar ────────────────────────────────────────────────────────── */
 .progress-track {
   background: rgba(255,255,255,0.06);
   border-radius: 999px;
@@ -49,145 +153,200 @@ html:not(.dark) .glass {
   position: relative;
 }
 .progress-fill {
-  background: linear-gradient(90deg, #22d3ee 0%, #3b82f6 40%, #a78bfa 100%);
+  background: linear-gradient(90deg, var(--prog-a), var(--prog-b), var(--prog-c));
   background-size: 200% 100%;
-  animation: shimmerGlow 3s linear infinite;
+  animation: shimmer 2.5s linear infinite;
   height: 100%;
   border-radius: 999px;
-  box-shadow: 0 0 18px rgba(34,211,238,0.45), 0 0 8px rgba(59,130,246,0.3);
-  transition: width .45s cubic-bezier(0.22, 1, 0.36, 1);
+  box-shadow: 0 0 16px var(--prog-glow);
+  transition: width 0.4s cubic-bezier(0.22,1,0.36,1), var(--t);
 }
 
-/* Scrollbar */
-*::-webkit-scrollbar { width: 10px; height: 10px; }
-*::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 8px; }
-*::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.18); }
-
-/* Terminal text */
-.terminal {
-  font-family: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
-  font-size: 12.5px;
-  line-height: 1.55;
+/* Cute: candy bar stripe */
+html.cute .progress-fill {
+  background: repeating-linear-gradient(
+    -45deg,
+    #ff69b4 0px, #ff69b4 8px,
+    #ffa0d0 8px, #ffa0d0 16px,
+    #c084fc 16px, #c084fc 24px,
+    #ffa0d0 24px, #ffa0d0 32px
+  );
+  background-size: 48px 48px;
+  animation: candy-slide 1s linear infinite;
+  box-shadow: 0 0 18px rgba(255,105,180,0.60);
 }
 
-/* Scanline flair */
-.scanline::after {
+/* ── Keyframes ───────────────────────────────────────────────────────────── */
+@keyframes shimmer {
+  0%   { background-position: 200% center; }
+  100% { background-position: -200% center; }
+}
+@keyframes candy-slide {
+  0%   { background-position: 0 0; }
+  100% { background-position: 48px 0; }
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.85); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes neonPulse {
+  0%, 100% { box-shadow: var(--glow-sm); }
+  50%       { box-shadow: var(--glow-lg); }
+}
+@keyframes cutePop {
+  0%   { transform: scale(1); }
+  30%  { transform: scale(1.12); }
+  60%  { transform: scale(0.95); }
+  100% { transform: scale(1); }
+}
+@keyframes floatUp {
+  0%   { transform: translateY(0) rotate(0deg); opacity: 0.8; }
+  100% { transform: translateY(-80px) rotate(20deg); opacity: 0; }
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes scanlineMove {
+  0%   { background-position: 0 0; }
+  100% { background-position: 0 8px; }
+}
+@keyframes glitch {
+  0%, 90%, 100% { transform: translate(0); filter: none; }
+  91%  { transform: translate(-2px, 1px); filter: brightness(1.5) hue-rotate(60deg); }
+  92%  { transform: translate(2px, -1px); }
+  93%  { transform: translate(0); }
+}
+
+/* ── Sigma text gradient ────────────────────────────────────────────────── */
+.sigma-text {
+  background: linear-gradient(135deg, #00f5ff 0%, #3b82f6 60%, #7c3aed 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.cute-text {
+  background: linear-gradient(135deg, #ff69b4 0%, #c084fc 60%, #fb7185 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.brand-text { background: var(--btn-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+
+/* ── Premium CTA button ─────────────────────────────────────────────────── */
+.btn-savage {
+  position: relative;
+  overflow: hidden;
+  background: var(--btn-grad);
+  border: none;
+  border-radius: var(--card-radius-sm);
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--t), filter 200ms, transform 150ms;
+}
+.btn-savage::after {
   content: '';
   position: absolute; inset: 0;
-  background: repeating-linear-gradient(0deg, rgba(255,255,255,0.03) 0 1px, transparent 1px 3px);
-  pointer-events: none;
-  border-radius: inherit;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+  transform: translateX(-100%);
+  transition: transform 500ms ease;
 }
+.btn-savage:hover { filter: brightness(1.10); box-shadow: var(--btn-shadow); transform: translateY(-1px); }
+.btn-savage:hover::after { transform: translateX(100%); }
+.btn-savage:active { transform: scale(0.96) translateY(0); }
+html.cute .btn-savage:active { animation: cutePop 0.35s ease-out; }
 
-/* Turbo ring glow */
-.turbo-ring {
-  box-shadow: 0 0 0 1px rgba(34,211,238,0.35), 0 0 24px rgba(59,130,246,0.35);
-}
-
-/* Animated grid bg for header */
-.grid-bg {
-  background-image:
-    linear-gradient(rgba(34,211,238,0.07) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(59,130,246,0.07) 1px, transparent 1px);
-  background-size: 40px 40px;
-}
-
-/* --- Premium Interaction System --- */
-
-/* Sidebar nav item */
+/* ── Sidebar nav ────────────────────────────────────────────────────────── */
 .sidebar-item {
   position: relative;
-  transition: background 220ms ease-out, color 220ms ease-out, transform 180ms ease-out;
+  cursor: pointer;
+  transition: var(--t), transform 150ms ease;
 }
 .sidebar-item::before {
   content: '';
-  position: absolute;
-  left: 0; top: 50%; transform: translateY(-50%);
+  position: absolute; left: 0; top: 50%; transform: translateY(-50%);
   width: 3px; height: 0;
   border-radius: 0 4px 4px 0;
-  background: linear-gradient(180deg, #22d3ee, #3b82f6);
-  transition: height 220ms ease-out;
+  background: var(--sidebar-bar);
+  transition: height 220ms cubic-bezier(0.22,1,0.36,1);
 }
-.sidebar-item:hover {
-  background: rgba(255,255,255,0.05);
-  transform: translateX(2px);
-}
-.sidebar-item:active {
-  transform: scale(0.98);
-}
-.sidebar-item.active::before {
-  height: 60%;
-}
-.sidebar-item.active {
-  background: linear-gradient(90deg, rgba(34,211,238,0.08), rgba(59,130,246,0.06), transparent);
-}
+.sidebar-item.active::before { height: 70%; }
+.sidebar-item.active { background: var(--sidebar-active); }
+.sidebar-item:hover { background: var(--bg-hover); transform: translateX(3px); }
+.sidebar-item:active { transform: scale(0.97); }
 
-/* Premium button */
-.btn-turbo {
-  position: relative;
-  overflow: hidden;
-  transition: transform 180ms ease-out, box-shadow 220ms ease-out, filter 220ms ease-out;
-}
-.btn-turbo::after {
+/* ── Glow ring ──────────────────────────────────────────────────────────── */
+.glow-ring { box-shadow: var(--glow-sm); transition: var(--t); }
+
+/* ── Scanline texture (Sigma only) ─────────────────────────────────────── */
+html:not(.cute) .scanline::after {
   content: '';
+  position: absolute; inset: 0; border-radius: inherit;
+  background: repeating-linear-gradient(0deg, rgba(0,245,255,0.025) 0 1px, transparent 1px 4px);
+  animation: scanlineMove 0.5s linear infinite;
+  pointer-events: none;
+}
+
+/* ── Cute: floating deco elements ──────────────────────────────────────── */
+.cute-deco {
+  animation: floatUp 3s ease-out infinite;
   position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
-  transform: translateX(-100%);
-  transition: transform 500ms ease-out;
-}
-.btn-turbo:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 8px 24px rgba(34,211,238,0.25), 0 2px 6px rgba(0,0,0,0.2);
-  filter: brightness(1.08);
-}
-.btn-turbo:hover::after {
-  transform: translateX(100%);
-}
-.btn-turbo:active {
-  transform: translateY(0) scale(0.97);
-  box-shadow: 0 2px 8px rgba(34,211,238,0.15);
-}
-
-/* Card entrance */
-.card-enter {
-  animation: fadeUp 0.45s ease-out forwards;
-}
-
-/* Status badge transition */
-.status-badge {
-  transition: background 250ms ease, color 250ms ease, transform 200ms ease;
-}
-
-/* Modal backdrop */
-.modal-backdrop {
-  backdrop-filter: blur(8px) saturate(120%);
-  -webkit-backdrop-filter: blur(8px) saturate(120%);
-}
-
-/* Toggle switch */
-.toggle-knob {
-  transition: left 220ms cubic-bezier(0.22, 1, 0.36, 1), background 220ms ease;
-}
-
-/* Stagger children */
-.stagger-children > * {
+  pointer-events: none;
+  font-size: 18px;
   opacity: 0;
-  animation: fadeUp 0.4s ease-out forwards;
 }
-.stagger-children > *:nth-child(1) { animation-delay: 0.03s; }
-.stagger-children > *:nth-child(2) { animation-delay: 0.06s; }
-.stagger-children > *:nth-child(3) { animation-delay: 0.09s; }
-.stagger-children > *:nth-child(4) { animation-delay: 0.12s; }
-.stagger-children > *:nth-child(5) { animation-delay: 0.15s; }
-.stagger-children > *:nth-child(6) { animation-delay: 0.18s; }
 
-/* Completed pulse */
+/* ── Scrollbar ──────────────────────────────────────────────────────────── */
+*::-webkit-scrollbar { width: 5px; }
+*::-webkit-scrollbar-track { background: transparent; }
+*::-webkit-scrollbar-thumb { background: var(--border-active); border-radius: 99px; }
+
+/* ── Terminal ───────────────────────────────────────────────────────────── */
+.terminal { font-family: 'Share Tech Mono', 'JetBrains Mono', monospace; font-size: 12px; line-height: 1.6; }
+
+/* ── Stagger animation ──────────────────────────────────────────────────── */
+.stagger > * { opacity: 0; animation: fadeUp 0.38s ease-out forwards; }
+.stagger > *:nth-child(1) { animation-delay: 0.04s; }
+.stagger > *:nth-child(2) { animation-delay: 0.08s; }
+.stagger > *:nth-child(3) { animation-delay: 0.12s; }
+.stagger > *:nth-child(4) { animation-delay: 0.16s; }
+.stagger > *:nth-child(5) { animation-delay: 0.20s; }
+.stagger > *:nth-child(6) { animation-delay: 0.24s; }
+
+/* ── Status badge ───────────────────────────────────────────────────────── */
+.status-badge { transition: var(--t); }
+
+/* ── Completed pulse ────────────────────────────────────────────────────── */
 @keyframes completedPulse {
-  0% { box-shadow: 0 0 0 0 rgba(52,211,153,0.4); }
-  70% { box-shadow: 0 0 0 10px rgba(52,211,153,0); }
+  0%   { box-shadow: 0 0 0 0 rgba(52,211,153,0.6); }
+  70%  { box-shadow: 0 0 0 12px rgba(52,211,153,0); }
   100% { box-shadow: 0 0 0 0 rgba(52,211,153,0); }
 }
-.completed-pulse {
-  animation: completedPulse 1s ease-out;
+.completed-pulse { animation: completedPulse 0.9s ease-out; }
+
+/* ── Mode transition blocker ────────────────────────────────────────────── */
+.mode-transitioning * { transition: var(--t) !important; }
+
+/* ── Grid bg (Sigma) ────────────────────────────────────────────────────── */
+html:not(.cute) .grid-bg {
+  background-image:
+    linear-gradient(rgba(0,245,255,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,245,255,0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* ── Glitch effect (Sigma header) ──────────────────────────────────────── */
+.glitch { animation: glitch 6s infinite; }
+
+/* ── Toggle switch ──────────────────────────────────────────────────────── */
+.toggle-knob { transition: transform 250ms cubic-bezier(0.22,1,0.36,1); }
+
+/* ── Particle canvas ────────────────────────────────────────────────────── */
+#particle-canvas {
+  position: fixed; inset: 0; z-index: 1;
+  pointer-events: none;
+  opacity: 0.5;
+  transition: opacity 0.6s ease;
 }

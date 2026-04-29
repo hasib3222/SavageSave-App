@@ -35,10 +35,10 @@ export default function PremiumModal({ open, onClose }) {
         {/* Header */}
         <div className="p-6 pb-4 text-center">
           <div className="w-12 h-12 mx-auto rounded-2xl shadow-turbo mb-4 flex items-center justify-center bg-gradient-to-br from-violet-500/20 to-pink-500/20 border border-violet-400/30">
-            <AppIcon src="/icon/pro subscription icon.png" size={40} />
+            <AppIcon src="icon/pro subscription icon.png" size={40} />
           </div>
           <h2 className="text-2xl font-bold bg-gradient-to-r from-cyan-300 via-blue-300 to-violet-300 bg-clip-text text-transparent">
-            TurboNest Pro
+            SavageSave Pro
           </h2>
           <p className="text-sm opacity-60 mt-1">Upgrade your download experience</p>
           <div className="inline-block mt-3 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-400/20 text-xs text-cyan-300">
@@ -114,10 +114,10 @@ export default function PremiumModal({ open, onClose }) {
         <div className="px-6 py-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {[
-              { src: '/icon/download icon.png', title: 'Full Speed', desc: 'No caps' },
-              { src: '/icon/setting.png', title: 'Ad-Free', desc: 'Clean UI' },
-              { src: '/icon/file icon.png', title: 'Cloud Sync', desc: 'Cross-device' },
-              { src: '/icon/pro subscription icon.png', title: 'Priority', desc: 'Faster starts' },
+              { src: 'icon/download icon.png', title: 'Full Speed', desc: 'No caps' },
+              { src: 'icon/setting.png', title: 'Ad-Free', desc: 'Clean UI' },
+              { src: 'icon/file icon.png', title: 'Cloud Sync', desc: 'Cross-device' },
+              { src: 'icon/pro subscription icon.png', title: 'Priority', desc: 'Faster starts' },
             ].map((f, i) => (
               <div key={i} className="rounded-xl bg-white/5 border border-white/5 p-3 text-center">
                 <div className="h-6 mb-1 flex items-center justify-center">
@@ -133,7 +133,7 @@ export default function PremiumModal({ open, onClose }) {
         {/* Footer */}
         <div className="p-6 pt-2 flex items-center justify-between border-t border-white/5">
           <div className="text-[11px] opacity-40">
-            All plans include core TurboNest downloader. No forced signup required.
+            All plans include core SavageSave downloader. No forced signup required.
           </div>
           <button
             onClick={onClose}
